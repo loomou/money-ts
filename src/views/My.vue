@@ -6,28 +6,25 @@
   </Layout>
 </template>
 
-<script>
-  import MyInf from "@/components/My/MyInf";
-  import MonthDetail from "@/components/My/MonthDetail";
-  import LabelSet from "@/components/My/LabelSet";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import MyInf from '@/components/My/MyInf.vue';
+  import MonthDetail from '@/components/My/MonthDetail.vue';
+  import LabelSet from '@/components/My/LabelSet.vue';
 
-  export default {
-    name: "My",
-    components: {
-      MyInf,
-      MonthDetail,
-      LabelSet
-    },
+  @Component({
+    components: {MyInf, MonthDetail, LabelSet}
+  })
+  export default class My extends Vue {
 
     created() {
       this.$store.commit('FileStore/fetchProfile');
       this.$store.commit('RecordStore/fetchRecords');
-    },
+    }
 
-    computed: {
-      info() {
-        return this.$store.state.FileStore.profile;
-      }
+    get info() {
+      return this.$store.state.FileStore.profile;
     }
   };
 </script>

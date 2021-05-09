@@ -39,62 +39,49 @@
     </nav>
     <div class="mass" v-show="isMask" @click="closeTag" @touchmove.prevent></div>
     <transition name="bottom">
-      <AddTag  @emitClose="closeTag" :selType="this.selType" v-if="isMask"/>
+      <AddTag @emitClose="closeTag" :selType="this.selType" v-if="isMask"/>
     </transition>
   </div>
 </template>
 
-<script>
-  import {TagHelper} from "@/Mixins/TagHelper";
-  import clone from "@/libs/clone.ts";
-  import AddTag from "@/components/Label/AddTag";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import clone from '@/libs/clone.ts';
+  import AddTag from '@/components/Label/AddTag.vue';
+  import {Tags} from '@/interfaces/tags';
 
-  export default {
-    name: "Label",
-    components: {
-      AddTag
-    },
-
-    data() {
-      return {
-        selType: 'pay',
-        inputContent: '',
-        num: 0,
-        isMask: false,
-        showWarn: false,
-        showMask: false
-      };
-    },
-
-    mixins: [TagHelper],
+  @Component({
+    components: {AddTag}
+  })
+  export default class Label extends Vue {
+    selType: string = 'pay';
+    isMask: boolean = false;
 
     beforeCreate() {
       this.$store.commit('TagStore/fetchTags');
-    },
-
-    computed: {
-      tags() {
-        return clone(this.$store.state.TagStore.tagList).filter(t => t.type === this.selType).filter(y => y.id > 0);
-      },
-      showTip1() {
-        return this.$store.state.TagStore.showTip;
-      }
-    },
-
-    methods: {
-      selectType(e) {
-        this.selType = e;
-      },
-
-      showAdd() {
-        this.isMask = true;
-      },
-
-      closeTag() {
-        this.isMask = false;
-      },
     }
-  };
+
+    get tags() {
+      return clone(this.$store.state.TagStore.tagList).filter((t: Tags) => t.type === this.selType).filter((y: Tags) => y.id > 0);
+    }
+
+    get showTip1() {
+      return this.$store.state.TagStore.showTip;
+    }
+
+    selectType(e: string) {
+      this.selType = e;
+    }
+
+    showAdd() {
+      this.isMask = true;
+    }
+
+    closeTag() {
+      this.isMask = false;
+    }
+  }
 </script>
 
 <style lang="scss" scoped>

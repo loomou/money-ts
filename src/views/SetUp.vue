@@ -21,67 +21,61 @@
   </div>
 </template>
 
-<script>
-  import Avatar from "@/components/SetUp/Avatar.vue";
-  import Nickname from "@/components/SetUp/Nickname.vue";
-  import Gender from "@/components/SetUp/Gender.vue";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import Avatar from '@/components/SetUp/Avatar.vue';
+  import Nickname from '@/components/SetUp/Nickname.vue';
+  import Gender from '@/components/SetUp/Gender.vue';
 
-  export default {
-    name: "SetUp",
-    components: {
-      Avatar,
-      Nickname,
-      Gender
-    },
+  @Component({
+    components: {Avatar, Nickname, Gender}
+  })
+  export default class SetUp extends Vue {
 
     created() {
       this.$store.commit('FileStore/fetchProfile');
-    },
-
-    computed: {
-      profile() {
-        return this.$store.state.FileStore.profile;
-      }
-    },
-
-    methods: {
-      changeImage(e) {
-        const accepts = ['image/gif', 'image/jpeg', 'image/png'];
-        const files = e.target;
-        if (!files) {
-          return;
-        }
-        const file = files.files[0];
-        if (!file) {
-          return;
-        }
-        if (!accepts.includes(file.type)) {
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.profile.avatar = reader.result;
-        };
-        reader.readAsDataURL(file);
-      },
-
-      changeName(name) {
-        if (name.length < 0) {
-          return;
-        }
-        this.profile.displayName = name;
-      },
-
-      changeGender(gender) {
-        this.profile.gender = gender;
-      },
-
-      saveProfile() {
-        this.$store.commit('FileStore/saveProfile', this.profile);
-        alert('保存成功');
-      }
     }
 
+    get profile() {
+      return this.$store.state.FileStore.profile;
+    }
+
+    changeImage(e: any) {
+      const accepts = ['image/gif', 'image/jpeg', 'image/png'];
+      const files = e.target;
+      if (!files) {
+        return;
+      }
+      const file = files.files[0];
+      if (!file) {
+        return;
+      }
+      if (!accepts.includes(file.type)) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.profile.avatar = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    changeName(name: string) {
+      if (name.length < 0) {
+        return;
+      }
+      this.profile.displayName = name;
+    }
+
+    changeGender(gender: string) {
+      this.profile.gender = gender;
+    }
+
+    saveProfile() {
+      this.$store.commit('FileStore/saveProfile', this.profile);
+      alert('保存成功');
+    }
   };
 </script>
 

@@ -1,12 +1,10 @@
 // @ts-ignore
 import defaultRecord from '../constant/defaultRecord.js';
-// @ts-ignore
-import clone from '../libs/clone.ts';
-// @ts-ignore
-import listId from '../libs/listId.ts';
-// @ts-ignore
+import clone from '../libs/clone';
+import listId from '../libs/listId';
 import router from '../router';
 import {Record, recordStoreState} from '@/interfaces/details';
+import dayjs from 'dayjs';
 
 
 const state = () => ({
@@ -133,8 +131,72 @@ const mutations = {
   }
 };
 
+const getters = {
+  filterTypeDate(state: recordStoreState) {
+    const ddd = clone(state.recordList);
+    state.filterList = ddd.filter((t: Record) => {
+      if (state.filterType === 'All') return true;
+      return t.icon === state.filterType;
+    }).filter((y: Record) => {
+      if (dayjs(state.filterDate).isSame((new Date()), 'month')) return true;
+      return dayjs(y.createdAt).isSame(dayjs(state.filterDate), 'month');
+    }).sort((a: Record, b: Record) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf());
+    return state.filterList;
+  },
+
+  dateSort(state: recordStoreState) {
+    const recordList = clone(state.filterList);
+    if (recordList.length === 0) {
+      return [];
+    }
+    const newList = clone(recordList)
+    const dateList = [{title: dayjs(newList[0].createdAt).format('YYYY-MM-DD'), items: [newList[0]]}];
+    for (let i = 1; i < newList.length; i++) {
+      const current = newList[i];
+      const last = dateList[dateList.length - 1];
+      if (dayjs(last.title).isSame(dayjs(current.createdAt), 'day')) {
+        last.items.push(current);
+      } else {
+        dateList.push({title: dayjs(current.createdAt).format('YYYY-MM-DD'), items: [current]});
+      }
+    }
+    const monthList = [{title: dayjs(newList[0].createdAt).format('YYYY-MM'), items: [dateList[0]]}];
+    for (let i = 1; i < dateList.length; i++) {
+      const current = dateList[i];
+      const last = monthList[monthList.length - 1];
+      if (dayjs(last.title).isSame(dayjs(current.title), 'month')) {
+        last.items.push(current);
+      } else {
+        monthList.push({title: dayjs(current.title).format('YYYY-MM'), items: [current]});
+      }
+    }
+    return monthList;
+  },
+
+  monthTotal(state: recordStoreState, getters: any) {
+    let qqq = 0, www = 0;
+    const ttt = clone(getters.filterTypeDate);
+    if (ttt.length === 0) {
+      state.headerDate = new Date();
+      return {qqq, www};
+    }
+    state.headerDate = ttt[0].createdAt;
+    const uuu = ttt.filter((t: Record) => dayjs(t.createdAt).isSame(ttt[0].createdAt, 'month'));
+    const iii = uuu.filter((t: Record) => t.type === 'pay');
+    const ooo = uuu.filter((t: Record) => t.type === 'income');
+    for (let i = 0; i < iii.length; i++) {
+      qqq = qqq + iii[i].amount;
+    }
+    for (let i = 0; i < ooo.length; i++) {
+      www = www + ooo[i].amount;
+    }
+    return {qqq, www};
+  }
+}
+
 export default {
   namespaced: true,
   state,
   mutations,
+  getters
 };

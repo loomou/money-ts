@@ -13,19 +13,15 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "MyInf",
-    props: {
-      info: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        defaultAvatar: require('../../assets/img/default-avatar.png'),
-      };
-    },
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+  import {files} from '@/interfaces/files';
+
+  @Component
+  export default class MyInf extends Vue {
+    @Prop() readonly info!: files;
+    defaultAvatar = require('../../assets/img/default-avatar.png');
   };
 </script>
 

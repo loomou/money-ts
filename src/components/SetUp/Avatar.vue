@@ -18,23 +18,18 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "Avatar",
-    props: {
-      profile: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        defaultAvatar: require('../../assets/img/default-avatar.png'),
-      };
-    },
-    methods: {
-      changeImage(e) {
-        this.$emit('changeImage', e);
-      },
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+  import {files} from '@/interfaces/files';
+
+  @Component
+  export default class Avatar extends Vue {
+    @Prop({type: Object}) readonly profile!: files;
+    defaultAvatar = require('../../assets/img/default-avatar.png');
+
+    changeImage(e: HTMLInputElement) {
+      this.$emit('changeImage', e);
     }
   };
 </script>

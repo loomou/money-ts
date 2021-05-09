@@ -8,9 +8,12 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "Layout",
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+
+  @Component
+  export default class Layout extends Vue {
   };
 </script>
 

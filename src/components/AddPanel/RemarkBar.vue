@@ -9,21 +9,18 @@
   </section>
 </template>
 
-<script>
-  export default {
-    name: "AddPanel",
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
 
-    data() {
-      return {
-        note: this.notes
-      }
-    },
+  @Component
+  export default class RemarkBar extends Vue {
+    note: string = this.notes;
 
-    computed: {
-      notes() {
-        return this.$store.state.RecordStore.setRecord.note
-      }
+    get notes() {
+      return this.$store.state.RecordStore.setRecord.note;
     }
+
   };
 </script>
 

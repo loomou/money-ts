@@ -38,38 +38,35 @@
   </div>
 </template>
 
-<script>
-  import clone from "../../libs/clone.ts";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import clone from "../../libs/clone";
+  import {Record} from '@/interfaces/details';
 
-  export default {
-    name: 'tagPop',
-
+  @Component
+  export default class TagPop extends Vue{
     created() {
       this.$store.commit('TagStore/fetchTags');
-    },
+    }
 
-    computed: {
-      payList() {
-        return clone(this.$store.state.TagStore.tagList).filter(t => t.type === 'pay');
-      },
-      incomeList() {
-        return clone(this.$store.state.TagStore.tagList).filter(t => t.type === 'income');
-      },
-      xxx() {
-        return this.$store.state.RecordStore.filterType
-      }
-    },
+    get payList() {
+      return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'pay');
+    }
+    get incomeList() {
+      return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'income');
+    }
+    get xxx() {
+      return this.$store.state.RecordStore.filterType
+    }
 
-    methods: {
-      ooo(tagId) {
-        this.$store.commit('RecordStore/queryType', tagId)
-        this.$emit('closeTypeSelect',false)
-      },
+    ooo(tagId:string) {
+      this.$store.commit('RecordStore/queryType', tagId)
+      this.$emit('closeTypeSelect',false)
+    }
 
-      closeTags() {
-        this.$emit('closeTypeSelect',false)
-      },
-
+    closeTags() {
+      this.$emit('closeTypeSelect',false)
     }
   };
 </script>

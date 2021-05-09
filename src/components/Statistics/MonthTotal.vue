@@ -38,60 +38,53 @@
   </div>
 </template>
 
-<script>
-  import dayjs from "dayjs";
-  import clone from "../../libs/clone.ts";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import dayjs from 'dayjs';
+  import clone from '../../libs/clone';
+  import {Record} from '@/interfaces/details';
 
-  export default {
-    name: "MonthTotal",
+  @Component
+  export default class MonthTotal extends Vue {
+    show: boolean = false;
+    currentDate: Date = new Date();
+    minDate: Date = new Date(2010, 1, 1);
+    maxDate: Date = new Date();
+    year: string = dayjs(new Date()).format('YYYY年M月');
 
-    data() {
-      return {
-        timeValue: '请选择时间',
-        show: false,
-        currentDate: new Date(),
-        minDate: new Date(2010, 1, 1),
-        maxDate: new Date(),
-        year: dayjs(new Date()).format('YYYY年M月'),
-      };
-    },
+    filterMonthRecord() {
+      const aaa = clone(this.$store.state.RecordStore.recordList).filter((t: Record) => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'));
+      const bbb = aaa.filter((t: Record)  => t.type === 'pay').reduce((sum: number, item: any) => {
+        return sum + item.amount;
+      }, 0);
+      const ccc = aaa.filter((t: Record)  => t.type === 'income').reduce((sum: number, item: any) => {
+        return sum + item.amount;
+      }, 0);
+      return {bbb, ccc};
+    }
 
-    computed: {
-      filterMonthRecord() {
-        const aaa = clone(this.$store.state.RecordStore.recordList).filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'));
-        const bbb = aaa.filter(t => t.type === 'pay').reduce((sum, item) => {
-          return sum + item.amount;
-        }, 0);
-        const ccc = aaa.filter(t => t.type === 'income').reduce((sum, item) => {
-          return sum + item.amount;
-        }, 0);
-        return {bbb, ccc};
-      },
-    },
+    showPopup() {
+      this.show = true;
+    }
 
-    methods: {
-      showPopup() {
-        this.show = true;
-      },
+    formatter(type: string, val: Date) {
+      if (type === 'year') {
+        return `${val}年`;
+      } else if (type === 'month') {
+        return `${val}月`;
+      }
+      return val;
+    }
 
-      formatter(type, val) {
-        if (type === 'year') {
-          return `${val}年`;
-        } else if (type === 'month') {
-          return `${val}月`;
-        }
-        return val;
-      },
-
-      confirmPicker(val) {
-        this.year = dayjs(val).format('YYYY年M月');
-        if (dayjs(val).isSame((new Date()), 'month')) {
-          this.$store.state.RecordStore.staDate = new Date();
-        } else {
-          this.$store.state.RecordStore.staDate = dayjs(val).endOf('month');
-        }
-        this.show = false;
-      },
+    confirmPicker(val: Date) {
+      this.year = dayjs(val).format('YYYY年M月');
+      if (dayjs(val).isSame((new Date()), 'month')) {
+        this.$store.state.RecordStore.staDate = new Date();
+      } else {
+        this.$store.state.RecordStore.staDate = dayjs(val).endOf('month');
+      }
+      this.show = false;
     }
   };
 </script>

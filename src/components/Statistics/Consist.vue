@@ -19,43 +19,29 @@
   </div>
 </template>
 
-<script>
-  import Proportion from "./Proportion";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+  import Proportion from './Proportion.vue';
 
-  export default {
-    name: "Consist",
-    components: {
-      Proportion
-    },
+  @Component({
+    components: {Proportion}
+  })
+  export default class Consist extends Vue {
+    @Prop() readonly title!: string;
+    selType: string = 'pay';
 
-    props: {
-      title: {
-        type: String,
-      }
-    },
-
-    data() {
-      return {
-        selType: 'pay'
-      };
-    },
-
-    computed: {
-      recordList() {
-        return this.$store.state.RecordStore.recordList;
-      },
-    },
-
-    methods: {
-      typeSel(type) {
-        if (type !== 'pay' && type !== 'income') {
-          throw new Error('type is unknown ');
-        }
-        this.selType = type;
-      }
+    get recordList() {
+      return this.$store.state.RecordStore.recordList;
     }
 
-  };
+    typeSel(type: string) {
+      if (type !== 'pay' && type !== 'income') {
+        throw new Error('type is unknown ');
+      }
+      this.selType = type;
+    }
+  }
 </script>
 
 <style lang="scss" scoped>

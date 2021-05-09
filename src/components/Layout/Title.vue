@@ -4,9 +4,12 @@
   </header>
 </template>
 
-<script>
-  export default {
-    name: "titles"
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+
+  @Component
+  export default class Title extends Vue {
   };
 </script>
 

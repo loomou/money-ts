@@ -1,9 +1,11 @@
+import dayjs from 'dayjs';
+
 export interface Record {
   icon: string,
   note: string,
   type: string,
   amount: number,
-  createdAt: Date | string,
+  createdAt: Date | string | dayjs.Dayjs,
   id?: string | number,
 }
 

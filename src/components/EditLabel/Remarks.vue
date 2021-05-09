@@ -12,21 +12,18 @@
   </section>
 </template>
 
-<script>
-  export default {
-    name: "Remarks",
-    props: {
-      placeholder: String,
-      value: {
-        type: String,
-        default: ''
-      },
-    },
-    methods: {
-      onValueChange(value) {
-        this.$emit('update:value', value);
-      }
-    },
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+
+  @Component
+  export default class Remarks extends Vue{
+    @Prop({type: String}) readonly placeholder!: string
+    @Prop({default: ''}) readonly value!: string
+
+    onValueChange(value: string) {
+      this.$emit('update:value', value);
+    }
   };
 </script>
 

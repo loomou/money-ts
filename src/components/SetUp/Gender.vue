@@ -11,23 +11,18 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "Gender",
-    props: {
-      profile: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        gender: this.profile.gender || null,
-      };
-    },
-    methods: {
-      changeGender(e) {
-        this.$emit('changeGender', e.target.value);
-      }
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+  import {files} from '@/interfaces/files';
+
+  @Component
+  export default class Gender extends Vue {
+    @Prop() readonly profile!: files;
+    gender: string | null = this.profile.gender || null;
+
+    changeGender(e: any) {
+      this.$emit('changeGender', e.target.value);
     }
   };
 </script>

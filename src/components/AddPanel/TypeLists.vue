@@ -23,51 +23,42 @@
   </ul>
 </template>
 
-<script>
-  import {TagHelper} from "@/Mixins/TagHelper.js";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import {Tags} from '@/interfaces/tags';
 
-  export default {
-    name: "TypeLists",
-    data() {
-      return {
-        indexes: '-1',
-        selectTags: '',
-      };
-    },
-
-    mixins: [TagHelper],
+  @Component
+  export default class TypeLists extends Vue {
+    indexes: string | number = '-1';
+    selectTags: string | number = '';
 
     created() {
       this.$store.commit('TagStore/fetchTags');
-    },
+    }
 
     mounted() {
       if (this.$route.params.id) {
         this.indexes = this.$store.state.RecordStore.currentList.icon;
         this.selectTags = this.$store.state.RecordStore.currentList.icon;
       }
-    },
+    }
 
-    computed: {
-      tagList() {
-        this.$store.commit('TagStore/setFilterTag', this.$store.state.TypeStore.typePick);
-        this.indexes = this.$store.state.TagStore.filterTag[0].id;
-        this.selectTags = this.$store.state.TagStore.filterTag[0].id;
-        return this.$store.state.TagStore.filterTag;
-      },
+    get tagList() {
+      this.$store.commit('TagStore/setFilterTag', this.$store.state.TypeStore.typePick);
+      this.indexes = this.$store.state.TagStore.filterTag[0].id;
+      this.selectTags = this.$store.state.TagStore.filterTag[0].id;
+      return this.$store.state.TagStore.filterTag;
+    }
 
-      yyy() {
-        return this.$store.state.TypeStore.typePick;
-      }
-    },
+    get yyy() {
+      return this.$store.state.TypeStore.typePick;
+    }
 
-    methods: {
-      pick(item) {
-        this.indexes = item.id;
-        this.selectTags = item.id;
-        this.$store.commit('RecordStore/setIcon', item.id);
-
-      },
+    pick(item: Tags) {
+      this.indexes = item.id;
+      this.selectTags = item.id;
+      this.$store.commit('RecordStore/setIcon', item.id);
     }
   };
 </script>

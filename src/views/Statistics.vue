@@ -25,39 +25,30 @@
   </Layout>
 </template>
 
-<script>
-  import MonthTotal from "@/components/Statistics/MonthTotal.vue";
-  import ChartSection from "@/components/Statistics/ChartSection.vue";
-  import Consist from "@/components/Statistics/Consist.vue";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import MonthTotal from '@/components/Statistics/MonthTotal.vue';
+  import ChartSection from '@/components/Statistics/ChartSection.vue';
+  import Consist from '@/components/Statistics/Consist.vue';
 
-  export default {
-    name: "Statistics",
-    components: {
-      MonthTotal,
-      ChartSection,
-      Consist
-    },
-
-    data() {
-      return {
-        type: 'pay',
-        monthSel: new Date(),
-      };
-    },
+  @Component({
+    components: {MonthTotal, ChartSection, Consist}
+  })
+  export default class Statistics extends Vue {
+    type: string = 'pay';
+    monthSel: Date = new Date();
 
     beforeCreate() {
       this.$store.commit('RecordStore/fetchRecords');
       this.$store.commit('TagStore/fetchTags');
       this.$store.state.RecordStore.staDate = new Date();
       this.$store.state.RecordStore.staType = 'pay';
-    },
+    }
 
-
-    computed: {
-      recordList() {
-        return this.$store.state.RecordStore.recordList;
-      },
-    },
+    get recordList() {
+      return this.$store.state.RecordStore.recordList;
+    }
   };
 </script>
 

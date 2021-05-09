@@ -21,34 +21,25 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
 
-  export default {
-    name: "PopupWin",
+  @Component
+  export default class PopupWin extends Vue {
+    noteContent: string = '';
 
-    data() {
-      return {
-        noteContent: '',
-        num: 0
-      };
-    },
+    get inputNum() {
+      return this.noteContent.length;
+    }
 
-    computed: {
-      inputNum() {
-        return this.noteContent.length
-      }
-    },
+    closeRemarkTag() {
+      this.$emit('closePopupWin', false);
+    }
 
-    methods: {
-
-      closeRemarkTag() {
-        this.$emit('closePopupWin', false)
-      },
-
-      OK() {
-        this.$store.commit('RecordStore/setNote', this.noteContent)
-        this.$emit('closePopupWin', false)
-      },
+    OK() {
+      this.$store.commit('RecordStore/setNote', this.noteContent);
+      this.$emit('closePopupWin', false);
     }
   };
 </script>

@@ -36,81 +36,69 @@
   </div>
 </template>
 
-<script>
-  import dayjs from "dayjs";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import dayjs from 'dayjs';
 
-  export default {
-    name: "SelectBar",
-
-    data() {
-      return {
-        show: false,
-        currentDate: new Date(),
-        minDate: new Date(2010, 1, 1),
-        maxDate: new Date(),
-        year: dayjs().format('M月D日'),
-        typeClass: 'pay'
-      };
-    },
+  @Component
+  export default class SelectBar extends Vue {
+    show: boolean = false;
+    currentDate: Date = new Date();
+    minDate: Date = new Date(2010, 1, 1);
+    maxDate: Date = new Date();
+    year: string = dayjs().format('M月D日');
+    typeClass: String = 'pay';
 
     mounted() {
       if (this.$route.params.id) {
         this.currentDate = new Date(this.$store.state.RecordStore.currentList.createdAt);
         this.year = dayjs(this.$store.state.RecordStore.currentList.createdAt).format('M月D日');
-        this.typeClass = this.$store.state.RecordStore.currentList.type
-        this.$store.commit('TypeStore/setTypeVal', this.$store.state.RecordStore.currentList.type)
+        this.typeClass = this.$store.state.RecordStore.currentList.type;
+        this.$store.commit('TypeStore/setTypeVal', this.$store.state.RecordStore.currentList.type);
       } else {
-        this.$store.commit('TypeStore/setTypeVal', this.typeClass)
+        this.$store.commit('TypeStore/setTypeVal', this.typeClass);
       }
-      // this.$store.state.TypeStore.typePick = this.value;
-    },
+    }
 
-    computed: {},
+    showPopup() {
+      this.show = true;
+    }
 
-    methods: {
+    confirmPicker(val: Date) {
+      let datePick = val.toISOString();
+      this.year = dayjs(val).format('M月D日');
+      this.show = false;
+      if (dayjs(val).isSame(new Date(), 'date')) {
+        datePick = new Date().toISOString();
+      }
+      this.$store.commit('RecordStore/setDate', datePick);
+    }
 
-      showPopup() {
-        this.show = true;
-      },
+    formatter(type: string, val: Date) {
+      if (type === 'year') {
+        return `${val}年`;
+      } else if (type === 'month') {
+        return `${val}月`;
+      } else if (type === 'day') {
+        return `${val}日`;
+      }
+      return val;
+    }
 
-      confirmPicker(val) {
-        let datePick = val.toISOString();
-        this.year = dayjs(val).format('M月D日');
-        this.show = false;
-        if (dayjs(val).isSame(new Date(), 'date')) {
-          datePick = new Date().toISOString();
-        }
-        this.$store.commit('RecordStore/setDate', datePick)
-        // this.$store.state.RecordStore.setRecord.createdAt = datePick;
-        // this.$emit('update:date', datePick);
-      },
-
-      formatter(type, val) {
-        if (type === 'year') {
-          return `${val}年`;
-        } else if (type === 'month') {
-          return `${val}月`;
-        } else if (type === 'day') {
-          return `${val}日`;
-        }
-        return val;
-      },
-
-      selectType(type) {
-        if (type !== 'pay' && type !== 'income') {
-          throw new Error('type is unknown ');
-        }
-        this.$store.commit('RecordStore/setType', type)
-        this.$emit('update:value', type);
-        if (type === 'pay') {
-          this.$store.commit('RecordStore/setIcon', '-1')
-        } else {
-          this.$store.commit('RecordStore/setIcon', '-12')
-        }
-        this.typeClass = type;
-        this.$store.commit('TypeStore/typeOption', type);
-      },
-
+    selectType(type: string) {
+      if (type !== 'pay' && type !== 'income') {
+        throw new Error('type is unknown ');
+      }
+      this.$store.commit('RecordStore/setType', type);
+      this.$emit('update:value', type);
+      if (type === 'pay') {
+        this.$store.commit('RecordStore/setIcon', '-1');
+      } else {
+        this.$store.commit('RecordStore/setIcon', '-12');
+      }
+      this.typeClass = type;
+      this.$store.commit('TypeStore/typeOption', type);
     }
   };
 </script>

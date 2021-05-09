@@ -31,110 +31,98 @@
   </div>
 </template>
 
-<script>
-  import DetailedLayout from "@/components/Detailed/DetailedLayout.vue";
-  import RecordList from "@/components/Detailed/RecordList.vue";
-  import TagPop from "@/components/Detailed/TagPop.vue";
-  import Addition from "@/components/Detailed/Addition.vue";
-  import AddPanel from "@/components/AddPanel/AddPanel.vue";
-  import PopupWin from "@/components/AddPanel/PopupWin.vue";
-  import AddTag from "@/components/Label/AddTag.vue";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import DetailedLayout from '@/components/Detailed/DetailedLayout.vue';
+  import RecordList from '@/components/Detailed/RecordList.vue';
+  import TagPop from '@/components/Detailed/TagPop.vue';
+  import Addition from '@/components/Detailed/Addition.vue';
+  import AddPanel from '@/components/AddPanel/AddPanel.vue';
+  import PopupWin from '@/components/AddPanel/PopupWin.vue';
+  import AddTag from '@/components/Label/AddTag.vue';
+  import clone from '@/libs/clone';
 
-  export default {
-    name: "Detailed",
-    components: {
-      TagPop,
-      DetailedLayout,
-      RecordList,
-      Addition,
-      AddPanel,
-      PopupWin,
-      AddTag
-    },
+  @Component({
+    components: {TagPop, DetailedLayout, RecordList, Addition, AddPanel, PopupWin, AddTag},
+  })
+  export default class Detailed extends Vue {
+    isAddPanel: boolean = true;
+    isPopupWin: boolean = false;
+    isMask: boolean = false;
+    ifAddPanel: boolean = false;
+    isType: boolean = false;
+    isTag: boolean = false;
 
-    data() {
-      return {
-        isAddPanel: true,
-        isPopupWin: false,
-        isMask: false,
-        ifAddPanel: false,
-        isType: false,
-        isTag: false
-      };
-    },
 
     beforeCreate() {
       this.$store.commit('RecordStore/fetchRecords');
-    },
+    }
 
     created() {
       this.$store.state.TagStore.typePick = 'pay';
       this.$store.state.RecordStore.filterType = 'All';
       this.$store.state.RecordStore.filterDate = new Date();
-    },
+    }
 
-    computed: {
-      currentType() {
-        return this.$store.state.TagStore.typePick;
+    currentType() {
+      return this.$store.state.TagStore.typePick;
+    }
+
+    closeAll() {
+      if (this.$route.params.id) {
+        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+      } else {
+        this.$store.commit('RecordStore/clearRecord');
       }
-    },
+      this.isPopupWin = this.isMask = this.ifAddPanel = this.isType = this.isTag = false;
+      this.isAddPanel = true;
+    }
 
-    methods: {
-      closeAll() {
-        if (this.$route.params.id) {
-          this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-        } else {
-          this.$store.commit('RecordStore/clearRecord');
-        }
-        this.isPopupWin = this.isMask = this.ifAddPanel = this.isType = this.isTag = false;
-        this.isAddPanel = true;
-      },
-
-      showAddPanel() {
-        if (!this.$route.params.id) {
-          this.$store.commit('RecordStore/clearRecord');
-        }
-        this.ifAddPanel = true;
-        this.isMask = true;
-      },
-
-      closeAdd(e) {
-        if (this.$route.params.id) {
-          this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-        } else {
-          this.$store.commit('RecordStore/clearRecord');
-        }
-        this.isMask = this.ifAddPanel = e;
-        this.isAddPanel = !e;
-      },
-
-      openRemarkWin(e) {
-        this.isAddPanel = !e;
-        this.isPopupWin = e;
-      },
-
-      closeNote(e) {
-        this.isAddPanel = !e;
-        this.isPopupWin = e;
-      },
-
-      showType(e) {
-        this.isType = this.isMask = e;
-      },
-
-      closeType(e) {
-        this.isType = this.isMask = e;
-      },
-
-      closeTag() {
-        this.isTag = false;
-        this.isAddPanel = true;
-      },
-
-      showAddTag() {
-        this.isAddPanel = false;
-        this.isTag = true;
+    showAddPanel() {
+      if (!this.$route.params.id) {
+        this.$store.commit('RecordStore/clearRecord');
       }
+      this.ifAddPanel = true;
+      this.isMask = true;
+    }
+
+    closeAdd(e: boolean) {
+      if (this.$route.params.id) {
+        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+      } else {
+        this.$store.commit('RecordStore/clearRecord');
+      }
+      this.isMask = this.ifAddPanel = e;
+      this.isAddPanel = !e;
+    }
+
+    openRemarkWin(e: boolean) {
+      this.isAddPanel = !e;
+      this.isPopupWin = e;
+    }
+
+    closeNote(e: boolean) {
+      this.isAddPanel = !e;
+      this.isPopupWin = e;
+    }
+
+    showType(e: boolean) {
+      this.isType = this.isMask = e;
+    }
+
+    closeType(e: boolean) {
+      this.isType = this.isMask = e;
+    }
+
+    closeTag() {
+      this.isTag = false;
+      this.isAddPanel = true;
+    }
+
+    showAddTag() {
+      this.isAddPanel = false;
+      this.isTag = true;
     }
   };
 </script>

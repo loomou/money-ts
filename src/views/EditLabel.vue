@@ -55,32 +55,29 @@
   </div>
 </template>
 
-<script>
-  import Remarks from "@/components/EditLabel/Remarks";
-  import Button from "@/components/EditLabel/Button";
-  import defaultIcon from "@/constant/defaultIcon";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import Remarks from '@/components/EditLabel/Remarks.vue';
+  import Button from '@/components/EditLabel/Button.vue';
+  // @ts-ignore
+  import defaultIcon from '@/constant/defaultIcon';
 
-  export default {
-    name: "EditLabel",
-    components: {
-      Remarks,
-      Button
-    },
+  @Component({
+    components: {Remarks, Button},
+  })
+  export default class EditLabel extends Vue {
+    tagName: string = '';
+    iconName: string = '';
+    show: boolean = false;
+    showWarn: boolean = false;
+    Icon: any = defaultIcon;
+    warnContent: string = '';
 
-    data() {
-      return {
-        tagName: '',
-        iconName: '',
-        show: false,
-        showWarn: false,
-        Icon: defaultIcon,
-        warnContent: ''
-      };
-    },
 
     beforeCreate() {
       this.$store.commit('TagStore/fetchTags');
-    },
+    }
 
     created() {
       let id = this.$route.params.id;
@@ -88,59 +85,55 @@
       if (!this.currentTag) {
         this.$router.replace('/404');
       }
-    },
+    }
 
     mounted() {
       this.iconName = this.currentTag.icon;
       this.tagName = this.currentTag.name;
-    },
+    }
 
-    computed: {
-      currentTag() {
-        return this.$store.state.TagStore.currentTag;
+    get currentTag() {
+      return this.$store.state.TagStore.currentTag;
+    }
+
+    updateTag(name: string) {
+      this.tagName = name;
+    }
+
+    update() {
+      if (this.tagName.length === 0) {
+        this.warnContent = '标签名不能空';
+        this.showWarn = true;
+        setTimeout(() => {
+          this.showWarn = false;
+        }, 1000);
+        return;
       }
-    },
+      this.$store.commit('TagStore/updateTag', {
+        id: this.currentTag.id,
+        name: this.tagName,
+        icon: this.iconName,
+        type: this.currentTag.type
+      });
+    }
 
-    methods: {
-      updateTag(name) {
-        this.tagName = name;
-      },
+    showDialog() {
+      this.show = true;
+    }
 
-      update() {
-        if (this.tagName.length === 0) {
-          this.warnContent = '标签名不能空';
-          this.showWarn = true;
-          setTimeout(() => {
-            this.showWarn = false;
-          }, 1000);
-          return;
-        }
-        this.$store.commit('TagStore/updateTag', {
-          id: this.currentTag.id,
-          name: this.tagName,
-          icon: this.iconName,
-          type: this.currentTag.type
-        });
-      },
-
-      showDialog() {
-        this.show = true;
-      },
-
-      remove() {
-        if (this.currentTag) {
-          this.$store.commit('RecordStore/modifyRecord', {id: this.currentTag.id, type: this.currentTag.type});
-          this.$store.commit('TagStore/removeTag', this.currentTag.id);
-        }
-      },
-
-      goBack() {
-        this.$router.back();
-      },
-
-      eee(e) {
-        this.iconName = e;
+    remove() {
+      if (this.currentTag) {
+        this.$store.commit('RecordStore/modifyRecord', {id: this.currentTag.id, type: this.currentTag.type});
+        this.$store.commit('TagStore/removeTag', this.currentTag.id);
       }
+    }
+
+    goBack() {
+      this.$router.back();
+    }
+
+    eee(e: string) {
+      this.iconName = e;
     }
   };
 </script>

@@ -40,97 +40,91 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "Keyboard",
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
 
-    data() {
-      return {
-        output: '0',
-        show: false,
-        content: '',
-        showWarn: false,
-        showMask: false
-      };
-    },
+  @Component
+  export default class Keyboard extends Vue{
+    output: string = '0'
+    show: boolean = false
+    content: string = ''
+    showWarn: boolean = false
+    showMask: boolean = false
 
     mounted() {
       if (this.$route.params.id) {
         this.output = this.$store.state.RecordStore.currentList.amount.toString();
       }
-    },
+    }
 
-    computed: {
-      type() {
-        return this.$store.state.TypeStore.typePick;
+    get type() {
+      return this.$store.state.TypeStore.typePick;
+    }
+
+    inputContent(event: MouseEvent) {
+      const button = (event.target as HTMLButtonElement);
+      const input = button.textContent as string;
+      if (this.output === '0') {
+        if ('0123456789'.indexOf(input) >= 0) {
+          this.output = input;
+        } else {
+          this.output += input;
+        }
+        return;
       }
-    },
-
-    methods: {
-      inputContent(event) {
-        const button = event.target;
-        const input = button.textContent;
-        if (this.output === '0') {
-          if ('0123456789'.indexOf(input) >= 0) {
-            this.output = input;
-          } else {
-            this.output += input;
-          }
-          return;
-        }
-        if (this.output.indexOf('.') >= 0 && input === '.') {
-          return;
-        }
-        if (this.output.indexOf('.') >= 0 && this.output.length - 1 - this.output.indexOf('.') >= 2) {
-          return;
-        }
-        if (this.output.length === 6 && input !== '.' && this.output.indexOf('.') < 0) {
-          this.showWarn = this.showMask = true;
-          setTimeout(() => {
-            this.showWarn = this.showMask = false;
-          }, 1000);
-          return;
-        }
-        this.output += input;
-      },
-
-      remove() {
-        if (this.output.length === 1) {
-          this.output = '0';
-        } else {
-          this.output = this.output.slice(0, -1);
-        }
-      },
-
-      clear() {
-        this.output = '0';
-      },
-
-      ok() {
-        const num = parseFloat(this.output);
-        if (num === 0) {
-          return;
-        }
-        if (this.$route.params.id) {
-          this.$store.commit('RecordStore/setAmount', num);
-          this.$store.commit('RecordStore/updateRecord', this.$store.state.RecordStore.setRecord);
-          this.content = '修改成功';
-        } else {
-          this.$store.commit('RecordStore/setAmount', num);
-          this.$store.commit('RecordStore/createRecord', this.$store.state.RecordStore.setRecord);
-          this.$store.state.RecordStore.currentRecord = this.$store.state.RecordStore.setRecord;
-          this.content = '添加成功';
-        }
-        this.output = '0';
-        this.show = this.showMask = true;
+      if (this.output.indexOf('.') >= 0 && input === '.') {
+        return;
+      }
+      if (this.output.indexOf('.') >= 0 && this.output.length - 1 - this.output.indexOf('.') >= 2) {
+        return;
+      }
+      if (this.output.length === 6 && input !== '.' && this.output.indexOf('.') < 0) {
+        this.showWarn = this.showMask = true;
         setTimeout(() => {
-          this.show = this.showMask = false;
-          setTimeout(() => {
-            this.$emit('ok');
-          }, 100);
-        }, 2000);
-      },
-    },
+          this.showWarn = this.showMask = false;
+        }, 1000);
+        return;
+      }
+      this.output += input;
+    }
+
+    remove() {
+      if (this.output.length === 1) {
+        this.output = '0';
+      } else {
+        this.output = this.output.slice(0, -1);
+      }
+    }
+
+    clear() {
+      this.output = '0';
+    }
+
+    ok() {
+      const num = parseFloat(this.output);
+      if (num === 0) {
+        return;
+      }
+      if (this.$route.params.id) {
+        this.$store.commit('RecordStore/setAmount', num);
+        this.$store.commit('RecordStore/updateRecord', this.$store.state.RecordStore.setRecord);
+        this.content = '修改成功';
+      } else {
+        this.$store.commit('RecordStore/setAmount', num);
+        this.$store.commit('RecordStore/createRecord', this.$store.state.RecordStore.setRecord);
+        this.$store.state.RecordStore.currentRecord = this.$store.state.RecordStore.setRecord;
+        this.content = '添加成功';
+      }
+      this.output = '0';
+      this.show = this.showMask = true;
+      setTimeout(() => {
+        this.show = this.showMask = false;
+        setTimeout(() => {
+          this.$emit('ok');
+        }, 100);
+      }, 2000);
+    }
   };
 </script>
 

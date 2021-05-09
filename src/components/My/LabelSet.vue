@@ -18,9 +18,12 @@
   </router-link>
 </template>
 
-<script>
-  export default {
-    name: "LabelSet"
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+
+  @Component
+  export default class LabelSet extends Vue {
   };
 </script>
 

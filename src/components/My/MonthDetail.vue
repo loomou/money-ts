@@ -29,9 +29,12 @@
   </router-link>
 </template>
 
-<script>
-  export default {
-    name: "MonthDetail"
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+
+  @Component
+  export default class MonthDetail extends Vue {
   };
 </script>
 

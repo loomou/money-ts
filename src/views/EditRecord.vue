@@ -64,30 +64,25 @@
   </div>
 </template>
 
-<script>
-  import AddPanel from "@/components/AddPanel/AddPanel.vue";
-  import PopupWin from "@/components/AddPanel/PopupWin.vue";
-  import AddTag from "@/components/Label/AddTag";
-  import dayjs from "dayjs";
-  import clone from "@/libs/clone";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import AddPanel from '@/components/AddPanel/AddPanel.vue';
+  import PopupWin from '@/components/AddPanel/PopupWin.vue';
+  import AddTag from '@/components/Label/AddTag.vue';
+  import dayjs from 'dayjs';
+  import clone from '@/libs/clone';
+  import {Record} from '@/interfaces/details';
 
-  export default {
-    name: "EditRecord",
-    components: {
-      AddPanel,
-      PopupWin,
-      AddTag
-    },
-
-    data() {
-      return {
-        isAddPanel: true,
-        isPopupWin: false,
-        isMask: false,
-        ifAddPanel: false,
-        isTag: false
-      };
-    },
+  @Component({
+    components: {AddPanel, PopupWin, AddTag}
+  })
+  export default class EditRecord extends Vue {
+    isAddPanel: boolean = true;
+    isPopupWin: boolean = false;
+    isMask: boolean = false;
+    ifAddPanel: boolean = false;
+    isTag: boolean = false;
 
     created() {
       const id = this.$route.params.id;
@@ -98,80 +93,77 @@
       if (!this.currentList) {
         this.$router.replace('/404');
       }
-    },
+    }
 
-    computed: {
-      currentList() {
-        return this.$store.state.RecordStore.currentList;
-      },
-      setList() {
-        return this.$store.state.RecordStore.setRecord;
+    get currentList() {
+      return this.$store.state.RecordStore.currentList;
+    }
+
+    get setList() {
+      return this.$store.state.RecordStore.setRecord;
+    }
+
+    formatDate(e: string | Date) {
+      return dayjs(e).format('YYYY年M月DD日 HH:mm:ss');
+    }
+
+    remove() {
+      if (this.currentList) {
+        this.$store.commit('RecordStore/removeList', this.currentList.id);
       }
-    },
+    }
 
-    methods: {
-      formatDate(e) {
-        return dayjs(e).format('YYYY年M月DD日 HH:mm:ss');
-      },
+    findIcon(icon: string) {
+      const def = clone(this.$store.state.TagStore.tagList);
+      return def.filter((t: Record) => t.id === icon)[0];
+    }
 
-      remove() {
-        if (this.currentList) {
-          this.$store.commit('RecordStore/removeList', this.currentList.id);
-        }
-      },
-
-      findIcon(icon) {
-        const def = clone(this.$store.state.TagStore.tagList);
-        return def.filter(t => t.id === icon)[0];
-      },
-
-      closeAll() {
-        if (this.$route.params.id) {
-          this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-        } else {
-          this.$store.commit('RecordStore/clearRecord');
-        }
-        this.isPopupWin = this.isMask = this.ifAddPanel = false;
-        this.isAddPanel = true;
-      },
-
-      showAddPanel() {
-        if (!this.$route.params.id) {
-          this.$store.commit('RecordStore/clearRecord');
-        }
-        this.ifAddPanel = true;
-        this.isMask = true;
-      },
-
-      closeAdd(e) {
-        if (this.$route.params.id) {
-          this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-        } else {
-          this.$store.commit('RecordStore/clearRecord');
-        }
-        this.isMask = this.ifAddPanel = e;
-        this.isAddPanel = !e;
-      },
-
-      openRemarkWin(e) {
-        this.isAddPanel = !e;
-        this.isPopupWin = e;
-      },
-
-      closeNote(e) {
-        this.isAddPanel = !e;
-        this.isPopupWin = e;
-      },
-
-      closeTag() {
-        this.isTag = false;
-        this.isAddPanel = true;
-      },
-
-      showAddTag() {
-        this.isAddPanel = false;
-        this.isTag = true;
+    closeAll() {
+      if (this.$route.params.id) {
+        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+      } else {
+        this.$store.commit('RecordStore/clearRecord');
       }
+      this.isPopupWin = this.isMask = this.ifAddPanel = false;
+      this.isAddPanel = true;
+    }
+
+    showAddPanel() {
+      if (!this.$route.params.id) {
+        this.$store.commit('RecordStore/clearRecord');
+      }
+      this.ifAddPanel = true;
+      this.isMask = true;
+    }
+
+    closeAdd(e: boolean) {
+      if (this.$route.params.id) {
+        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+      } else {
+        this.$store.commit('RecordStore/clearRecord');
+      }
+      this.isMask = this.ifAddPanel = e;
+      this.isAddPanel = !e;
+    }
+
+    openRemarkWin(e: boolean) {
+      this.isAddPanel = !e;
+      this.isPopupWin = e;
+    }
+
+    closeNote(e: boolean) {
+      this.isAddPanel = !e;
+      this.isPopupWin = e;
+    }
+
+    closeTag() {
+      this.isTag = false;
+      this.isAddPanel = true;
+    }
+
+    showAddTag() {
+      this.isAddPanel = false;
+      this.isTag = true;
     }
   };
 </script>

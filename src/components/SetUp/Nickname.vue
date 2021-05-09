@@ -16,23 +16,18 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "Nickname",
-    props: {
-      profile: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        displayName: this.profile.displayName || null,
-      };
-    },
-    methods: {
-      changeName() {
-        this.$emit('changeName', this.displayName);
-      },
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+  import {files} from '@/interfaces/files';
+
+  @Component
+  export default class Nickname extends Vue{
+    @Prop() readonly profile!: files
+    displayName:string|null = this.profile.displayName || null
+
+    changeName() {
+      this.$emit('changeName', this.displayName);
     }
   };
 </script>

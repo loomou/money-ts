@@ -9,18 +9,17 @@
   </div>
 </template>
 
-<script>
-  import Header from "./Header.vue";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import Header from './Header.vue';
 
-  export default {
-    name: "DetailedLayout",
-    components: {
-      Header,
-    },
-    methods: {
-      showTs(e) {
-        this.$emit('isTypeSelect', e);
-      }
+  @Component({
+    components: {Header},
+  })
+  export default class DetailedLayout extends Vue {
+    showTs(e: boolean) {
+      this.$emit('isTypeSelect', e);
     }
   };
 </script>

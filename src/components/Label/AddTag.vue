@@ -23,71 +23,55 @@
   </div>
 </template>
 
-<script>
-  export default {
-    name: "AddTag",
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component, Prop} from 'vue-property-decorator';
+  import {Tags} from '@/interfaces/tags';
 
-    props: {
-      selType: {
-        type: String,
-        default: 'pay',
-        required: true
-      }
-    },
-
-    data() {
-      return {
-        num: 0,
-        inputContent: '',
-        showWarn: false,
-        showMask: false,
-        warnContent: ''
-      };
-    },
+  @Component
+  export default class AddTag extends Vue {
+    @Prop({type: String, default: 'pay', required: true}) readonly selType!: string;
+    num: number = 0;
+    inputContent: String = '';
+    showWarn: boolean = false;
+    showMask: boolean = false;
+    warnContent: string = '';
 
     created() {
       this.$store.commit('TagStore/fetchTags');
-    },
-
-    computed: {
-      showTip1() {
-        return this.$store.state.TagStore.showTip;
-      }
-    },
-
-    methods: {
-      emitClose() {
-        this.$emit('emitClose');
-      },
-
-      addType() {
-        if (this.inputContent.length === 0) {
-          this.warnContent = '类型名不能空';
-          this.showWarn = this.showMask = true;
-          setTimeout(() => {
-            this.showWarn = this.showMask = false;
-          }, 1000);
-          return;
-        }
-        const names = this.$store.state.TagStore.tagList.map(item => item.name);
-        if (names.indexOf(this.inputContent) >= 0) {
-          this.warnContent = '类型名已存在';
-          this.showWarn = this.showMask = true;
-          setTimeout(() => {
-            this.showWarn = this.showMask = false;
-          }, 1000);
-          return;
-        }
-        this.$store.commit('TagStore/createTag', {name: this.inputContent, type: this.selType});
-        this.$emit('emitClose');
-      },
-
-      inputNum(e) {
-        this.inputContent = e;
-        this.num = e.length;
-      }
     }
-  };
+
+    emitClose() {
+      this.$emit('emitClose');
+    }
+
+    addType() {
+      if (this.inputContent.length === 0) {
+        this.warnContent = '类型名不能空';
+        this.showWarn = this.showMask = true;
+        setTimeout(() => {
+          this.showWarn = this.showMask = false;
+        }, 1000);
+        return;
+      }
+      const names = this.$store.state.TagStore.tagList.map((item: Tags) => item.name);
+      if (names.indexOf(this.inputContent) >= 0) {
+        this.warnContent = '类型名已存在';
+        this.showWarn = this.showMask = true;
+        setTimeout(() => {
+          this.showWarn = this.showMask = false;
+        }, 1000);
+        return;
+      }
+      this.$store.commit('TagStore/createTag', {name: this.inputContent, type: this.selType});
+      this.$emit('emitClose');
+    }
+
+    inputNum(e: string) {
+      this.inputContent = e;
+      this.num = e.length;
+    }
+  }
 </script>
 
 <style lang="scss" scoped>

@@ -39,59 +39,51 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
   import dayjs from "dayjs";
 
-  export default {
-    name: "headers",
+  @Component
+  export default class Header extends Vue{
+    show: boolean = false
+    currentDate: Date = new Date()
+    minDate: Date = new Date(2010, 1, 1)
+    maxDate: Date = new Date()
+    year: Date | string = this.currentMonth
 
-    data() {
-      return {
-        show: false,
-        currentDate: new Date(),
-        minDate: new Date(2010, 1, 1),
-        maxDate: new Date(),
-        year: this.currentMonth,
-        payTotal: 0,
-        incomeTotal: 0,
-      };
-    },
+    get total() {
+      return this.$store.getters['RecordSortStore/monthTotal'];
+    }
 
-    computed: {
-      total() {
-        return this.$store.getters['RecordSortStore/monthTotal'];
-      },
-      currentMonth() {
-        return this.$store.state.RecordStore.filterDate;
+    get currentMonth() {
+      return this.$store.state.RecordStore.filterDate;
+    }
+
+    showPopup() {
+      this.show = true;
+    }
+
+    formatter(type:string, val: Date) {
+      if (type === 'year') {
+        return `${val}年`;
+      } else if (type === 'month') {
+        return `${val}月`;
       }
-    },
+      return val;
+    }
 
-    methods: {
-      showPopup() {
-        this.show = true;
-      },
+    confirmPicker(val:Date) {
+      this.$store.commit('RecordStore/queryMonth', val)
+      this.show = false;
+    }
 
-      formatter(type, val) {
-        if (type === 'year') {
-          return `${val}年`;
-        } else if (type === 'month') {
-          return `${val}月`;
-        }
-        return val;
-      },
+    showTags() {
+      this.$emit('showTypeSelect', true)
+    }
 
-      confirmPicker(val) {
-        this.$store.commit('RecordStore/queryMonth', val)
-        this.show = false;
-      },
-
-      showTags() {
-        this.$emit('showTypeSelect', true)
-      },
-
-      nnn(date) {
-        return dayjs(date).format('YYYY年M月');
-      }
+    nnn(date:string) {
+      return dayjs(date).format('YYYY年M月');
     }
   };
 </script>

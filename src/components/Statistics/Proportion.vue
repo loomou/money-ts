@@ -30,54 +30,45 @@
   </div>
 </template>
 
-<script>
-  import clone from "../../libs/clone.ts";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component,Prop} from 'vue-property-decorator';
+  import clone from "../../libs/clone";
   import dayjs from "dayjs";
+  import {Record} from '@/interfaces/details';
+  import {Tags} from '@/interfaces/tags';
 
-  export default {
-    name: "Proportion",
-
-    data() {
-      return {};
-    },
-
-    props: {
-      SelectType: {
-        type: String,
-        default: 'pay'
-      }
-    },
+  @Component
+  export default class Proportion extends Vue{
+  @Prop({default: 'pay'}) readonly SelectType!: string
 
     created() {
       this.$store.commit('TagStore/fetchTags');
-    },
+    }
 
-    computed: {
-      hhh() {
-        if (!this.$store.state.RecordStore.recordList) return;
-        const uuu = clone(this.$store.state.RecordStore.recordList)
-          .filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
-          .filter(t => t.type === this.SelectType);
-        let eee = {};
-        let total = 0;
-        uuu.forEach(r => {
-          const yyy = r.icon;
-          if (!(yyy in eee)) {
-            eee[yyy] = {
-              amount: 0,
-              category: this.$store.state.TagStore.tagList.find(c => c.id === yyy),
-              ratio: 0.0
-            };
-          }
-          total += r.amount;
-          eee[yyy].amount += r.amount;
-          eee[yyy].ratio = eee[yyy].amount / total;
-        });
-        Object.values(eee).forEach(c => c.ratio = c.amount / total);
-        return Object.values(eee).sort((a, b) => b.ratio - a.ratio);
-      }
-    },
-
+    hhh() {
+      if (!this.$store.state.RecordStore.recordList) return;
+      const uuu = clone(this.$store.state.RecordStore.recordList)
+        .filter((t: Record) => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
+        .filter((t: Record) => t.type === this.SelectType);
+      let eee:any = {};
+      let total = 0;
+      uuu.forEach((r: Record) => {
+        const yyy = r.icon;
+        if (!(yyy in eee)) {
+          eee[yyy] = {
+            amount: 0,
+            category: this.$store.state.TagStore.tagList.find((c: Tags) => c.id === yyy),
+            ratio: 0.0
+          };
+        }
+        total += r.amount;
+        eee[yyy].amount += r.amount;
+        eee[yyy].ratio = eee[yyy].amount / total;
+      });
+      Object.values(eee).forEach((c:any) => c.ratio = c.amount / total);
+      return Object.values(eee).sort((a:any, b:any) => b.ratio - a.ratio);
+    }
   };
 </script>
 

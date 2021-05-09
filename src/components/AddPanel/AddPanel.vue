@@ -20,31 +20,25 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
   import SelectBar from "./SelectBar.vue";
   import TypeLists from "./TypeLists.vue";
   import Keyboard from "./Keyboard.vue";
   import RemarkBar from "./RemarkBar.vue";
 
-  export default {
-    name: "AddPanel",
-    components: {
-      SelectBar,
-      TypeLists,
-      Keyboard,
-      RemarkBar,
-    },
+  @Component({
+    components:  {SelectBar, TypeLists, Keyboard, RemarkBar,},
+  })
+  export default class AddPanel extends Vue{
 
-    methods: {
-      closeAddPanel() {
-        this.$emit('closeAddPanel', false)
-      },
-      showRemarkWin() {
-        this.$emit('showPopupWin', true)
-      },
-      // saveRecord() {
-      //   this.$emit()
-      // }
+    closeAddPanel() {
+      this.$emit('closeAddPanel', false)
+    }
+
+    showRemarkWin() {
+      this.$emit('showPopupWin', true)
     }
   };
 </script>

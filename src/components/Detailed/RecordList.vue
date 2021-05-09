@@ -55,98 +55,88 @@
   </div>
 </template>
 
-<script>
-  import dayjs from "dayjs";
-  import clone from "../../libs/clone.ts";
+<script lang="ts">
+  import Vue from 'vue';
+  import {Component} from 'vue-property-decorator';
+  import dayjs from 'dayjs';
+  import clone from '../../libs/clone';
+  import {Record} from '@/interfaces/details';
+  import {Tags} from '@/interfaces/tags';
 
-  export default {
-    name: "RecordList",
-
-    data() {
-      return {
-        type: 'pay',
-        interval: 'day',
-      };
-    },
+  @Component
+  export default class RecordList extends Vue {
+    type: string = 'pay';
 
     beforeCreate() {
       this.$store.commit('TagStore/fetchTags');
-    },
+    }
 
-    computed: {
-      xxx() {
-        return this.$store.getters['RecordSortStore/monthSort'];
-      },
-      zzz() {
-        return this.$store.state.RecordStore.recordList;
+    get xxx() {
+      return this.$store.getters['RecordSortStore/monthSort'];
+    }
+
+    get zzz() {
+      return this.$store.state.RecordStore.recordList;
+    }
+
+    isSameMonth(dateTime: string | Date) {
+      return !dayjs(dateTime).isSame((new Date()), 'month');
+    }
+
+    beautify(string: string | Date) {
+      return dayjs(string).format('M月D日');
+    }
+
+    beautify2(string: string | Date) {
+      return dayjs(string).format('YYYY年M月');
+    }
+
+    beautify3(num: string | Date) {
+      let week = '';
+      switch (new Date(num).getDay()) {
+        case 0:
+          week = '星期天';
+          break;
+        case 1:
+          week = '星期一';
+          break;
+        case 2:
+          week = '星期二';
+          break;
+        case 3:
+          week = '星期三';
+          break;
+        case 4:
+          week = '星期四';
+          break;
+        case 5:
+          week = '星期五';
+          break;
+        case 6:
+          week = '星期六';
       }
-    },
+      return week;
+    }
 
-    methods: {
+    beautify4(num: number) {
+      return num.toFixed(2);
+    }
 
-      yyy(j, k) {
-        return dayjs(j).isSame(dayjs(k), 'month');
-      },
+    getTime(time: string | Date) {
+      return dayjs(time).format('HH:mm');
+    }
 
-      isSameMonth(dateTime) {
-        return !dayjs(dateTime).isSame((new Date()), 'month');
-      },
+    ttt(date: string | Date, filterDate: any, type: string) {
+      const bbb = clone(this.zzz).filter((t: Record) => dayjs(t.createdAt).isSame(dayjs(date), filterDate)).filter((y: Record) => y.type === type);
+      return bbb.reduce((a: number, b: Record) => {
+        return a + b.amount;
+      }, 0);
+    }
 
-      beautify(string) {
-        return dayjs(string).format('M月D日');
-      },
-
-      beautify2(string) {
-        return dayjs(string).format('YYYY年M月');
-      },
-
-      beautify3(num) {
-        let week = "";
-        switch (new Date(num).getDay()) {
-          case 0:
-            week = "星期天";
-            break;
-          case 1:
-            week = "星期一";
-            break;
-          case 2:
-            week = "星期二";
-            break;
-          case 3:
-            week = "星期三";
-            break;
-          case 4:
-            week = "星期四";
-            break;
-          case 5:
-            week = "星期五";
-            break;
-          case 6:
-            week = "星期六";
-        }
-        return week;
-      },
-
-      beautify4(num) {
-        return num.toFixed(2);
-      },
-
-      getTime(time) {
-        return dayjs(time).format('HH:mm');
-      },
-
-      ttt(date, filterDate, type) {
-        const bbb = clone(this.zzz).filter(t => dayjs(t.createdAt).isSame(dayjs(date), filterDate)).filter(y => y.type === type);
-        return bbb.reduce((a, b) => {
-          return a + b.amount;
-        }, 0);
-      },
-
-      findIcon(icon) {
-        const def = clone(this.$store.state.TagStore.tagList);
-        return def.filter(t => t.id === icon)[0];
-      }
-    },
+    findIcon(icon: string) {
+      const def = clone(this.$store.state.TagStore.tagList);
+      return def.filter((t: Tags) => t.id === icon)[0];
+    }
   };
 </script>
 
