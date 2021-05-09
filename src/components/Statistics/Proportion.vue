@@ -1,0 +1,184 @@
+<template>
+  <div>
+    <ul class="pro-wrapper">
+      <li class="pro-content" v-for="(item, index) in hhh" :key="index">
+      <span class="icon-wrapper">
+        <span class="icon-content" :class="SelectType === 'pay' ? 'pay' : 'income'">
+          <svg class="icon" style="width: 18px;height: 18px">
+            <use :xlink:href="'#icon-' + item.category.icon"></use>
+          </svg>
+        </span>
+        <span class="icon-name">{{item.category.name}}</span>
+      </span>
+        <span class="radio-wrapper">
+        <span class="radio-content">
+          <span class="radio-num">
+            {{(item.ratio * 100).toFixed(2) + '%'}}
+          </span>
+        </span>
+        <span class="ooo">
+          <span class="ppp" v-bind:style="{width: (item.ratio * 100).toFixed(2) + '%'}"
+                :class="SelectType === 'pay' ? 'pay' : 'income'"></span>
+        </span>
+      </span>
+        <span class="amount">
+        ￥{{item.amount.toFixed(2)}}
+      </span>
+      </li>
+    </ul>
+    <div class="no-data" v-if="hhh.length === 0">暂无数据</div>
+  </div>
+</template>
+
+<script>
+  import clone from "../../libs/clone.ts";
+  import dayjs from "dayjs";
+
+  export default {
+    name: "Proportion",
+
+    data() {
+      return {};
+    },
+
+    props: {
+      SelectType: {
+        type: String,
+        default: 'pay'
+      }
+    },
+
+    created() {
+      this.$store.commit('TagStore/fetchTags');
+    },
+
+    computed: {
+      hhh() {
+        if (!this.$store.state.RecordStore.recordList) return;
+        const uuu = clone(this.$store.state.RecordStore.recordList)
+          .filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
+          .filter(t => t.type === this.SelectType);
+        let eee = {};
+        let total = 0;
+        uuu.forEach(r => {
+          const yyy = r.icon;
+          if (!(yyy in eee)) {
+            eee[yyy] = {
+              amount: 0,
+              category: this.$store.state.TagStore.tagList.find(c => c.id === yyy),
+              ratio: 0.0
+            };
+          }
+          total += r.amount;
+          eee[yyy].amount += r.amount;
+          eee[yyy].ratio = eee[yyy].amount / total;
+        });
+        Object.values(eee).forEach(c => c.ratio = c.amount / total);
+        return Object.values(eee).sort((a, b) => b.ratio - a.ratio);
+      }
+    },
+
+  };
+</script>
+
+<style lang="scss" scoped>
+  .pro-wrapper {
+    margin-top: 32px;
+    list-style: none;
+    font-size: 12px;
+
+    .pro-content {
+      display: flex;
+      margin-bottom: 10px;
+
+      span {
+        display: inline-flex;
+        -webkit-box-align: center;
+        align-items: center;
+      }
+
+      .icon-content {
+        padding: 8px;
+        display: inline-flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        /*background: rgb(9, 114, 231);*/
+        border-radius: 50%;
+
+        .icon {
+          fill: white;
+        }
+
+        &.pay {
+          background: rgb(9, 114, 231);
+        }
+
+        &.income {
+          background: rgb(240, 183, 57);
+        }
+      }
+
+      .icon-name {
+        margin-left: 5px;
+        margin-right: 5px;
+        width: 50px;
+      }
+
+      .radio-wrapper {
+        -webkit-box-pack: end;
+        text-align: right;
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+
+        .radio-content {
+          display: inline-flex;
+          -webkit-box-align: center;
+          align-items: center;
+          -webkit-box-pack: center;
+          justify-content: center;
+
+          .radio-num {
+            color: rgb(144, 147, 153);
+            font-size: 10px;
+            width: 50px;
+            margin-right: 5px;
+          }
+        }
+
+        .ooo {
+          position: relative;
+          height: 6px;
+          width: 110px;
+          background: rgb(229, 229, 229);
+          border-radius: 16px;
+
+          .ppp {
+            position: absolute;
+            left: 0;
+            height: 100%;
+            border-radius: 16px;
+
+            &.pay {
+              background: rgb(9, 114, 231);
+            }
+
+            &.income {
+              background: rgb(240, 183, 57);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+    text-align: center;
+    color: rgb(144, 147, 153);
+  }
+</style>

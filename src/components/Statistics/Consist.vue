@@ -1,0 +1,110 @@
+<template>
+  <div>
+    <div class="title">
+      <span>{{this.title}}</span>
+      <span>
+        <button class="btn btn-pay"
+                @click="typeSel('pay')"
+                :class="this.selType === 'pay' && 'selected-pay'">
+          支出
+        </button>
+        <button class="btn btn-income"
+                @click="typeSel('income')"
+                :class="this.selType === 'income' && 'selected-income'">
+          收入
+        </button>
+      </span>
+    </div>
+    <Proportion :SelectType="this.selType"/>
+  </div>
+</template>
+
+<script>
+  import Proportion from "./Proportion";
+
+  export default {
+    name: "Consist",
+    components: {
+      Proportion
+    },
+
+    props: {
+      title: {
+        type: String,
+      }
+    },
+
+    data() {
+      return {
+        selType: 'pay'
+      };
+    },
+
+    computed: {
+      recordList() {
+        return this.$store.state.RecordStore.recordList;
+      },
+    },
+
+    methods: {
+      typeSel(type) {
+        if (type !== 'pay' && type !== 'income') {
+          throw new Error('type is unknown ');
+        }
+        this.selType = type;
+      }
+    }
+
+  };
+</script>
+
+<style lang="scss" scoped>
+  .title {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    font-size: 14px;
+
+    .btn {
+      display: inline-flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      padding: 2px 8px;
+      outline: none;
+      border-radius: 16px;
+      border: 1px solid rgb(241, 241, 241);
+      background: rgb(241, 241, 241);
+      color: rgb(144, 147, 153);
+      font-size: 12px;
+
+      &.selected-pay {
+        border: 1px solid rgb(9, 114, 231);
+        background: rgb(9, 114, 231);
+        color: rgb(241, 241, 241);
+      }
+
+      &.selected-income {
+        border: 1px solid rgb(240, 183, 57);
+        background: rgb(240, 183, 57);
+        color: rgb(241, 241, 241);
+      }
+    }
+
+    .btn-pay {
+      margin-right: 8px;
+    }
+  }
+
+  .no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+    text-align: center;
+    color: rgb(144, 147, 153);
+  }
+</style>

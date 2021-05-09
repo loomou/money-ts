@@ -1,0 +1,46 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; }
+
+a {
+  text-decoration: none;
+  color: inherit; }
+
+ul, ol {
+  list-style: none; }
+
+li {
+  display: list-item;
+  text-align: -webkit-match-parent; }
+
+button, input {
+  font: inherit; }
+
+a, button {
+  cursor: pointer;
+  border: none;
+  outline: none; }
+
+:focus {
+  outline: none; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal; }
+
+section {
+  display: block; }
+
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden; }
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent; }
+
+/*# sourceMappingURL=reset.css.map */
