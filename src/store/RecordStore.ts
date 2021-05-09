@@ -1,5 +1,4 @@
-// @ts-ignore
-import defaultRecord from '../constant/defaultRecord.js';
+import defaultRecord from '../constant/defaultRecord';
 import clone from '../libs/clone';
 import listId from '../libs/listId';
 import router from '../router';

@@ -1,6 +1,4 @@
-// @ts-ignore
 import defaultType from "../constant/defaultType";
-// @ts-ignore
 import createId from "../libs/createId";
 import router from "../router";
 import {Tags, tagState} from '@/interfaces/tags';

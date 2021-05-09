@@ -1,4 +1,4 @@
-const defaultIcon = [
+const defaultIcon:string[] = [
   'bus',
   'rail',
   'sub',

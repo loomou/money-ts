@@ -1,4 +1,6 @@
-const defaultRecord = [
+import {Record} from '@/interfaces/details';
+
+const defaultRecord:Record[] = [
   {createdAt: "2020-03-02T16:00:00.000Z", id: "-1", amount: 2000, icon: "-19", note: "去重庆", type: "pay"},
   {createdAt: "2021-04-23T08:07:52.990Z", id: "-2", amount: 86.52, icon: "-4", note: "", type: "pay"},
   {createdAt: "2021-04-23T05:59:15.306Z", id: "-3", amount: 55, icon: "-1", note: "", type: "pay"},

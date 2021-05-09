@@ -1,4 +1,6 @@
-const defaultType = [
+import {Tags} from '@/interfaces/tags';
+
+const defaultType:Tags[] = [
   {id: "-1", type: "pay", name: "餐饮", icon: "rest"},
   {id: "-2", type: "pay", name: "衣服", icon: "clothes"},
   {id: "-3", type: "pay", name: "书", icon: "books"},
