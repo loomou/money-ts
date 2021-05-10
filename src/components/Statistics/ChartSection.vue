@@ -38,11 +38,11 @@
   export default class ChartSection extends Vue {
     @Prop({required: true}) readonly title!: string;
     @Prop({default: 100}) readonly chartWidth!: number;
-    @Prop({default: 'date'}) readonly filterType!: any;
+    @Prop({default: 'date'}) readonly filterType!: dayjs.UnitType;
     @Prop({default: 'YYYY-MM-DD'}) readonly selFormat!: string;
     @Prop({default: 'M月D日'}) readonly Format!: string;
     @Prop({default: 30}) readonly num!: number;
-    @Prop({default: 'day'}) readonly subType!: any;
+    @Prop({default: 'day'}) readonly subType!: dayjs.UnitType;
     selType: string = 'pay';
 
     beforeCreate() {

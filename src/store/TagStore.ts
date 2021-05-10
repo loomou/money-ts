@@ -2,17 +2,18 @@ import defaultType from "../constant/defaultType";
 import createId from "../libs/createId";
 import router from "../router";
 import {Tags, tagState} from '@/interfaces/tags';
+import {MutationTree, Module} from 'vuex';
 
-const state = () => ({
+const state: tagState = {
   tagList: [],
   currentTag: undefined,
   filterTag: undefined,
   createTagType: 'pay',
   showTip: false,
-});
+};
 
-const mutations = {
-  fetchTags(state: tagState) {
+const mutations:MutationTree<tagState> = {
+  fetchTags(state) {
     state.tagList = JSON.parse(window.localStorage.getItem('tagList') || '[]');
     if (state.tagList.length === 0) {
       state.tagList = defaultType;
@@ -20,21 +21,21 @@ const mutations = {
     }
   },
 
-  createTag(state: tagState, payload: Tags) {
+  createTag(state, payload: Tags) {
     const id = createId().toString();
     state.tagList.push({id, name: payload.name, icon: 'other', type: payload.type});
     window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
   },
 
-  setCurrentTag(state: tagState, id: string | number) {
+  setCurrentTag(state, id: string | number) {
     state.currentTag = state.tagList.filter(t => t.id === id)[0];
   },
 
-  setFilterTag(state: tagState, type: string) {
+  setFilterTag(state, type: string) {
     state.filterTag = state.tagList.filter(t => t.type === type);
   },
 
-  updateTag(state: tagState, payload: Tags) {
+  updateTag(state, payload: Tags) {
     const {id, name, icon, type} = payload;
     const tag = state.tagList.filter(item => item.id === id)[0];
     tag.name = name;
@@ -45,7 +46,7 @@ const mutations = {
     router.back();
   },
 
-  removeTag(state: tagState, id: string | number) {
+  removeTag(state, id: string | number) {
     let index = -1;
     for (let i = 0; i < state.tagList.length; i++) {
       if (state.tagList[i].id === id) {
@@ -63,7 +64,7 @@ const mutations = {
   },
 };
 
-export default {
+export const TagStore:Module<tagState, any> ={
   namespaced: true,
   state,
   mutations,

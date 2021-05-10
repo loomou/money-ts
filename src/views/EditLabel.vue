@@ -60,7 +60,6 @@
   import {Component} from 'vue-property-decorator';
   import Remarks from '@/components/EditLabel/Remarks.vue';
   import Button from '@/components/EditLabel/Button.vue';
-  // @ts-ignore
   import defaultIcon from '@/constant/defaultIcon';
 
   @Component({
@@ -71,7 +70,7 @@
     iconName: string = '';
     show: boolean = false;
     showWarn: boolean = false;
-    Icon: any = defaultIcon;
+    Icon: string[] = defaultIcon;
     warnContent: string = '';
 
 

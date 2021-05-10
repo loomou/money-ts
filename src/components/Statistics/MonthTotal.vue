@@ -53,12 +53,21 @@
     maxDate: Date = new Date();
     year: string = dayjs(new Date()).format('YYYY年M月');
 
-    filterMonthRecord() {
-      const aaa = clone(this.$store.state.RecordStore.recordList).filter((t: Record) => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'));
-      const bbb = aaa.filter((t: Record)  => t.type === 'pay').reduce((sum: number, item: any) => {
+    get recordList() {
+      return this.$store.state.RecordStore.recordList as Record[];
+    }
+
+    get filterMonthRecord() {
+      const aaa = clone(this.recordList).filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'));
+      let bbb = 0
+      let ccc = 0
+      if (aaa.length === 0) {
+        return {bbb, ccc};
+      }
+      bbb = aaa.filter(t => t.type === 'pay').reduce((sum, item) => {
         return sum + item.amount;
       }, 0);
-      const ccc = aaa.filter((t: Record)  => t.type === 'income').reduce((sum: number, item: any) => {
+      ccc = aaa.filter(t => t.type === 'income').reduce((sum, item)  => {
         return sum + item.amount;
       }, 0);
       return {bbb, ccc};

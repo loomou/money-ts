@@ -72,11 +72,11 @@
     }
 
     get xxx() {
-      return this.$store.getters['RecordSortStore/monthSort'];
+      return this.$store.getters['RecordStore/dateSort'];
     }
 
     get zzz() {
-      return this.$store.state.RecordStore.recordList;
+      return this.$store.state.RecordStore.recordList as Record[];
     }
 
     isSameMonth(dateTime: string | Date) {
@@ -126,16 +126,16 @@
       return dayjs(time).format('HH:mm');
     }
 
-    ttt(date: string | Date, filterDate: any, type: string) {
-      const bbb = clone(this.zzz).filter((t: Record) => dayjs(t.createdAt).isSame(dayjs(date), filterDate)).filter((y: Record) => y.type === type);
+    ttt(date: string | Date, filterDate: dayjs.UnitType, type: string) {
+      const bbb = clone(this.zzz).filter(t => dayjs(t.createdAt).isSame(dayjs(date), filterDate)).filter(y => y.type === type);
       return bbb.reduce((a: number, b: Record) => {
         return a + b.amount;
       }, 0);
     }
 
     findIcon(icon: string) {
-      const def = clone(this.$store.state.TagStore.tagList);
-      return def.filter((t: Tags) => t.id === icon)[0];
+      const def = clone(this.$store.state.TagStore.tagList as Tags[]);
+      return def.filter(t => t.id === icon)[0];
     }
   };
 </script>

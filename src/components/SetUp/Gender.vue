@@ -3,9 +3,9 @@
     <span>性别</span>
     <span class="gender-checkbox"></span>
     <div class="radio">
-      <input type="radio" name="radio" id="男" value="男" v-model="gender" @change="changeGender($event)">
+      <input type="radio" name="radio" id="男" value="男" v-model="gender" @change="changeGender($event.target.value)">
       <label for="男">男</label>
-      <input type="radio" name="radio" id="女" value="女" v-model="gender" @change="changeGender($event)">
+      <input type="radio" name="radio" id="女" value="女" v-model="gender" @change="changeGender($event.target.value)">
       <label for="女">女</label>
     </div>
   </div>
@@ -21,8 +21,8 @@
     @Prop() readonly profile!: files;
     gender: string | null = this.profile.gender || null;
 
-    changeGender(e: any) {
-      this.$emit('changeGender', e.target.value);
+    changeGender(e: HTMLInputElement) {
+      this.$emit('changeGender', e);
     }
   };
 </script>

@@ -27,6 +27,7 @@
   import Avatar from '@/components/SetUp/Avatar.vue';
   import Nickname from '@/components/SetUp/Nickname.vue';
   import Gender from '@/components/SetUp/Gender.vue';
+  import {files} from '@/interfaces/files';
 
   @Component({
     components: {Avatar, Nickname, Gender}
@@ -38,10 +39,10 @@
     }
 
     get profile() {
-      return this.$store.state.FileStore.profile;
+      return this.$store.state.FileStore.profile as files;
     }
 
-    changeImage(e: any) {
+    changeImage(e:any) {
       const accepts = ['image/gif', 'image/jpeg', 'image/png'];
       const files = e.target;
       if (!files) {

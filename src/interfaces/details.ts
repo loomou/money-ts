@@ -16,11 +16,13 @@ export interface recordStoreState {
   setRecord: Record,
   staType: 'pay',
   staDate: Date | string,
-  headerDate: Date | string,
-  tagsShow: Boolean,
-  xxx: Record[],
+  headerDate: Date | string  | dayjs.Dayjs,
   filterType: String,
   filterDate: Date | string,
+}
+
+export interface Interface {
+
 }
 
 

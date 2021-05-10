@@ -32,28 +32,29 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import {Component,Prop} from 'vue-property-decorator';
-  import clone from "../../libs/clone";
-  import dayjs from "dayjs";
+  import {Component, Prop} from 'vue-property-decorator';
+  import clone from '../../libs/clone';
+  import dayjs from 'dayjs';
   import {Record} from '@/interfaces/details';
   import {Tags} from '@/interfaces/tags';
 
   @Component
-  export default class Proportion extends Vue{
-  @Prop({default: 'pay'}) readonly SelectType!: string
+  export default class Proportion extends Vue {
+    @Prop({default: 'pay'}) readonly SelectType!: string;
 
     created() {
       this.$store.commit('TagStore/fetchTags');
     }
 
-    hhh() {
+    get hhh() {
       if (!this.$store.state.RecordStore.recordList) return;
-      const uuu = clone(this.$store.state.RecordStore.recordList)
-        .filter((t: Record) => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
-        .filter((t: Record) => t.type === this.SelectType);
-      let eee:any = {};
+      const uuu = clone(this.$store.state.RecordStore.recordList as Record[])
+        .filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
+        .filter(t => t.type === this.SelectType);
+      type EEE = { [key: string]: { amount: number, category: { icon: string, id: string, name: string, type: string }, ratio: number } }
+      let eee: EEE = {};
       let total = 0;
-      uuu.forEach((r: Record) => {
+      uuu.forEach(r => {
         const yyy = r.icon;
         if (!(yyy in eee)) {
           eee[yyy] = {
@@ -62,12 +63,13 @@
             ratio: 0.0
           };
         }
+        console.log(eee);
         total += r.amount;
         eee[yyy].amount += r.amount;
         eee[yyy].ratio = eee[yyy].amount / total;
       });
-      Object.values(eee).forEach((c:any) => c.ratio = c.amount / total);
-      return Object.values(eee).sort((a:any, b:any) => b.ratio - a.ratio);
+      Object.values(eee).forEach((c: any) => c.ratio = c.amount / total);
+      return Object.values(eee).sort((a: any, b: any) => b.ratio - a.ratio);
     }
   };
 </script>

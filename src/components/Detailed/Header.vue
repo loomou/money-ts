@@ -53,7 +53,7 @@
     year: Date | string = this.currentMonth
 
     get total() {
-      return this.$store.getters['RecordSortStore/monthTotal'];
+      return this.$store.getters['RecordStore/monthTotal'];
     }
 
     get currentMonth() {
