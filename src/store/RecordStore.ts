@@ -81,6 +81,26 @@ const mutations: MutationTree<recordStoreState> = {
     window.localStorage.setItem('recordList', JSON.stringify(state.recordList));
   },
 
+  modifyCurrentRecord(state) {
+    state.currentList = state.setRecord
+  },
+
+  modifyStaDate(state) {
+    state.staDate = new Date()
+  },
+
+  modifyStaType(state) {
+    state.staType = 'pay'
+  },
+
+  modifyFilterType(state) {
+    state.filterType = 'All'
+  },
+
+  modifyFilterDate(state) {
+    state.filterDate = new Date()
+  },
+
   //读取需要编辑的数据
   setCurrentRecord(state, id: string | number) {
     state.currentList = state.recordList.filter(t => t.id === id)[0];

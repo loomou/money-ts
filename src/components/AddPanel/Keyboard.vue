@@ -113,7 +113,7 @@
       } else {
         this.$store.commit('RecordStore/setAmount', num);
         this.$store.commit('RecordStore/createRecord', this.$store.state.RecordStore.setRecord);
-        this.$store.state.RecordStore.currentRecord = this.$store.state.RecordStore.setRecord;
+        this.$store.commit('RecordStore/modifyCurrentRecord')
         this.content = '添加成功';
       }
       this.output = '0';

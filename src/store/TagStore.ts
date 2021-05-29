@@ -1,6 +1,6 @@
-import defaultType from "../constant/defaultType";
-import createId from "../libs/createId";
-import router from "../router";
+import defaultType from '../constant/defaultType';
+import createId from '../libs/createId';
+import router from '../router';
 import {Tags, tagState} from '@/interfaces/tags';
 import {MutationTree, Module} from 'vuex';
 
@@ -12,7 +12,7 @@ const state: tagState = {
   showTip: false,
 };
 
-const mutations:MutationTree<tagState> = {
+const mutations: MutationTree<tagState> = {
   fetchTags(state) {
     state.tagList = JSON.parse(window.localStorage.getItem('tagList') || '[]');
     if (state.tagList.length === 0) {
@@ -62,9 +62,13 @@ const mutations:MutationTree<tagState> = {
       window.alert('删除失败');
     }
   },
+
+  modifyCurrentTag(state) {
+    state.currentTag = 'pay';
+  },
 };
 
-export const TagStore:Module<tagState, any> ={
+export const TagStore: Module<tagState, any> = {
   namespaced: true,
   state,
   mutations,

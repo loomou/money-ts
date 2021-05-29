@@ -2,7 +2,6 @@
   <div>
     <div class="panel-wrapper">
       <div class="add-panel">
-        {{$store.state.RecordStore.setRecord}}
         <header class="add-header">
           <svg class="icon" @click="closeAddPanel">
             <use xlink:href="#icon-close"></use>

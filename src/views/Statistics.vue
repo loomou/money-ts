@@ -42,8 +42,8 @@
     beforeCreate() {
       this.$store.commit('RecordStore/fetchRecords');
       this.$store.commit('TagStore/fetchTags');
-      this.$store.state.RecordStore.staDate = new Date();
-      this.$store.state.RecordStore.staType = 'pay';
+      this.$store.commit('RecordStore/modifyStaDate');
+      this.$store.commit('RecordStore/modifyStaType')
     }
 
     get recordList() {

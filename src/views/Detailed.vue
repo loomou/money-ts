@@ -41,7 +41,6 @@
   import AddPanel from '@/components/AddPanel/AddPanel.vue';
   import PopupWin from '@/components/AddPanel/PopupWin.vue';
   import AddTag from '@/components/Label/AddTag.vue';
-  import clone from '@/libs/clone';
 
   @Component({
     components: {TagPop, DetailedLayout, RecordList, Addition, AddPanel, PopupWin, AddTag},
@@ -60,18 +59,19 @@
     }
 
     created() {
-      this.$store.state.TagStore.typePick = 'pay';
-      this.$store.state.RecordStore.filterType = 'All';
-      this.$store.state.RecordStore.filterDate = new Date();
+      this.$store.commit('TagStore/modifyCurrentTag')
+      this.$store.commit('RecordStore/modifyFilterType')
+      this.$store.commit('RecordStore/modifyFilterDate')
     }
 
     currentType() {
-      return this.$store.state.TagStore.typePick;
+      return this.$store.state.TagStore.currentTag;
     }
 
     closeAll() {
       if (this.$route.params.id) {
-        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+        // this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+        this.$store.commit('RecordStore/cloneCurrentList');
       } else {
         this.$store.commit('RecordStore/clearRecord');
       }
@@ -89,7 +89,8 @@
 
     closeAdd(e: boolean) {
       if (this.$route.params.id) {
-        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+        // this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+        this.$store.commit('RecordStore/cloneCurrentList');
       } else {
         this.$store.commit('RecordStore/clearRecord');
       }

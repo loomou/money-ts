@@ -7,7 +7,7 @@ export interface Tags {
 
 export interface tagState {
   tagList: Tags[],
-  currentTag: undefined | Tags,
+  currentTag: undefined | Tags | string,
   filterTag: undefined | Tags[],
   createTagType: string,
   showTip: Boolean,
