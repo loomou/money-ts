@@ -51,7 +51,8 @@
       const uuu = clone(this.$store.state.RecordStore.recordList as Record[])
         .filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
         .filter(t => t.type === this.SelectType);
-      type EEE = { [key: string]: { amount: number, category: { icon: string, id: string, name: string, type: string }, ratio: number } }
+      type DDD = { icon: string, id: string, name: string, type: string }
+      type EEE = { [key: string]: { amount: number, category: DDD, ratio: number } }
       let eee: EEE = {};
       let total = 0;
       uuu.forEach(r => {
@@ -63,13 +64,12 @@
             ratio: 0.0
           };
         }
-        console.log(eee);
         total += r.amount;
         eee[yyy].amount += r.amount;
         eee[yyy].ratio = eee[yyy].amount / total;
       });
-      Object.values(eee).forEach((c: any) => c.ratio = c.amount / total);
-      return Object.values(eee).sort((a: any, b: any) => b.ratio - a.ratio);
+      Object.values(eee).forEach(c => c.ratio = c.amount / total);
+      return Object.values(eee).sort((a, b) => b.ratio - a.ratio);
     }
   };
 </script>

@@ -127,7 +127,7 @@
           label: {
             show: true,
             position: 'top',
-            formatter: (data: any) => {
+            formatter: (data:any) => {
               if (data.value === 0) {
                 return '';
               } else if (data.value >= 10000) {

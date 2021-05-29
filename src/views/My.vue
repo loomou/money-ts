@@ -1,7 +1,6 @@
 <template>
   <Layout>
     <MyInf :info.sync="info"/>
-    <MonthDetail/>
     <LabelSet/>
   </Layout>
 </template>
@@ -10,11 +9,10 @@
   import Vue from 'vue';
   import {Component} from 'vue-property-decorator';
   import MyInf from '@/components/My/MyInf.vue';
-  import MonthDetail from '@/components/My/MonthDetail.vue';
   import LabelSet from '@/components/My/LabelSet.vue';
 
   @Component({
-    components: {MyInf, MonthDetail, LabelSet}
+    components: {MyInf, LabelSet}
   })
   export default class My extends Vue {
 
