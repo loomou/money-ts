@@ -30,7 +30,7 @@
 
   @Component
   export default class AddTag extends Vue {
-    @Prop({type: String, default: 'pay', required: true}) readonly selType!: string;
+    @Prop({type: String, default: 'pay', required: true}) readonly selectType!: string;
     num: number = 0;
     inputContent: String = '';
     showWarn: boolean = false;
@@ -63,7 +63,7 @@
         }, 1000);
         return;
       }
-      this.$store.commit('TagStore/createTag', {name: this.inputContent, type: this.selType});
+      this.$store.commit('TagStore/createTag', {name: this.inputContent, type: this.selectType});
       this.$emit('emitClose');
     }
 
