@@ -1,32 +1,39 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Detailed from '../views/Detailed.vue';
-import Statistics from '../views/Statistics.vue';
-import My from '../views/My.vue';
-import NotFound from '../views/NotFound.vue';
-import SetUp from '../views/SetUp.vue';
-import Label from '../views/Label.vue';
-import EditLabel from '../views/EditLabel.vue';
-import EditRecord from '../views/EditRecord.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
-  {path: '/', redirect: '/detailed'},
-  {path: '/detailed', component: Detailed},
-  {path: '/statistics', component: Statistics},
-  {path: '/my', component: My},
-  {path: '/setup', component: SetUp},
-  {path: '/label', component: Label},
-  {path: '/label/edit/:id', component: EditLabel},
-  {path: '/detailed/edit/:id', component: EditRecord},
-  {path: '*', component: NotFound}
+  {path: '/', redirect: '/sign'},
+  {path: '/detailed', component: () => import('../views/Detailed.vue')},
+  {path: '/statistics', component: () => import('../views/Statistics.vue')},
+  {path: '/my', component: () => import('../views/My.vue')},
+  {path: '/setup', component: () => import('../views/SetUp.vue')},
+  {path: '/label', component: () => import('../views/Label.vue')},
+  {path: '/label/edit/:id', component: () => import('../views/EditLabel.vue')},
+  {path: '/detailed/edit/:id', component: () => import('../views/EditRecord.vue')},
+  {path: '/sign', component: () => import('../views/Sign.vue')},
+  {path: '*', component: () => import('../views/NotFound.vue')},
 ];
 
 const router = new VueRouter({
-  // mode: 'history',
-  // base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  let token = localStorage.getItem('AuthToken');
+  if (to.path === '/sign') {
+    if (token) {
+      next('/detailed');
+    }
+    next();
+  } else {
+    if (!token) {
+      next('/sign');
+    } else {
+      next();
+    }
+  }
 });
 
 export default router;
