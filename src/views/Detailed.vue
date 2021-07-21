@@ -21,9 +21,6 @@
         <PopupWin v-if="this.isPopupWin" @closePopupWin="closeNote"/>
       </transition>
       <transition name="bottom">
-        <AddTag :selType="currentType" @emitClose="closeTag" v-if="isTag"/>
-      </transition>
-      <transition name="bottom">
         <TagPop v-if="isType" @closeTypeSelect="closeType"/>
       </transition>
     </div>
@@ -40,10 +37,9 @@
   import Addition from '@/components/Detailed/Addition.vue';
   import AddPanel from '@/components/AddPanel/AddPanel.vue';
   import PopupWin from '@/components/AddPanel/PopupWin.vue';
-  import AddTag from '@/components/Label/AddTag.vue';
 
   @Component({
-    components: {TagPop, DetailedLayout, RecordList, Addition, AddPanel, PopupWin, AddTag},
+    components: {TagPop, DetailedLayout, RecordList, Addition, AddPanel, PopupWin},
   })
   export default class Detailed extends Vue {
     isAddPanel: boolean = true;
@@ -52,7 +48,6 @@
     ifAddPanel: boolean = false;
     isType: boolean = false;
     isTag: boolean = false;
-
 
     beforeCreate() {
       this.$store.commit('RecordStore/fetchRecords');
@@ -64,7 +59,7 @@
       this.$store.commit('RecordStore/modifyFilterDate')
     }
 
-    currentType() {
+    get currentType() {
       return this.$store.state.TagStore.currentTag;
     }
 

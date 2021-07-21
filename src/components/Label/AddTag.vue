@@ -64,7 +64,7 @@
         return;
       }
       this.$store.commit('TagStore/createTag', {name: this.inputContent, type: this.selectType});
-      this.$emit('emitClose');
+      this.$emit('open');
     }
 
     inputNum(e: string) {

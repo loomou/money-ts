@@ -49,15 +49,13 @@
             <AddPanel v-show="this.isAddPanel"
                       @closeAddPanel="closeAdd"
                       @showPopupWin="openRemarkWin"
-                      @openAddTag="showAddTag"/>
+                      @openAddTag="showAddTag"
+                      :current-type="this.setList.type"/>
           </transition>
         </div>
       </transition>
       <transition>
         <PopupWin v-if="this.isPopupWin" @closePopupWin="closeNote"/>
-      </transition>
-      <transition name="bottom">
-        <AddTag :selType="setList.type" @emitClose="closeTag" v-if="isTag"/>
       </transition>
     </div>
     <div class="mass" v-show="this.isMask" @click="closeAll"></div>

@@ -39,7 +39,7 @@
     </nav>
     <div class="mass" v-show="isMask" @click="closeTag" @touchmove.prevent></div>
     <transition name="bottom">
-      <AddTag @emitClose="closeTag" :selType="this.selType" v-if="isMask"/>
+      <AddTag @open="closeTag" :selectType="this.selType" v-if="isMask"/>
     </transition>
   </div>
 </template>

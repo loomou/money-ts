@@ -90,6 +90,7 @@
       if (type !== 'pay' && type !== 'income') {
         throw new Error('type is unknown ');
       }
+      this.$emit('changeType', type)
       this.$store.commit('RecordStore/setType', type);
       this.$emit('update:value', type);
       if (type === 'pay') {
