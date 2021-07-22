@@ -30,8 +30,8 @@ const mutations: MutationTree<tagState> = {
     window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
   },
 
-  setCurrentTag(state, id: string | number) {
-    state.currentTag = state.tagList.filter(t => t.id === id)[0];
+  setCurrentTag(state, id: Tags) {
+    state.currentTag = id;
   },
 
   setFilterTag(state, type: string) {
