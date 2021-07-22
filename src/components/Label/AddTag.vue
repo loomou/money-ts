@@ -27,6 +27,8 @@
   import Vue from 'vue';
   import {Component, Prop} from 'vue-property-decorator';
   import {Tags} from '@/interfaces/tags';
+  import service from '@/libs/http';
+  import defaultType from '@/constant/defaultType';
 
   @Component
   export default class AddTag extends Vue {
@@ -36,10 +38,6 @@
     showWarn: boolean = false;
     showMask: boolean = false;
     warnContent: string = '';
-
-    created() {
-      this.$store.commit('TagStore/fetchTags');
-    }
 
     emitClose() {
       this.$emit('emitClose');
@@ -63,7 +61,29 @@
         }, 1000);
         return;
       }
-      this.$store.commit('TagStore/createTag', {name: this.inputContent, type: this.selectType});
+      service.post('/tag/create', {
+        userId: localStorage.getItem('userId'),
+        name: this.inputContent,
+        type: this.selectType,
+        icon: 'other'
+      }).then(res => {
+        service.get('/tag/get', {
+          params: {
+            userId: localStorage.getItem('userId')
+          }
+        }).then(res => {
+          if (!res.data.tagsList) {
+            this.$store.commit('TagStore/setTagList', defaultType);
+          } else {
+            const userTagList = defaultType.concat(res.data.tagsList);
+            this.$store.commit('TagStore/setTagList', userTagList);
+          }
+        }).catch(err => {
+          console.log(err);
+        });
+      }).catch(err => {
+        console.log(err.data);
+      });
       this.$emit('open');
     }
 
