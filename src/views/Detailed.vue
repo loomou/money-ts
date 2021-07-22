@@ -29,162 +29,177 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
-  import DetailedLayout from '@/components/Detailed/DetailedLayout.vue';
-  import RecordList from '@/components/Detailed/RecordList.vue';
-  import TagPop from '@/components/Detailed/TagPop.vue';
-  import Addition from '@/components/Detailed/Addition.vue';
-  import AddPanel from '@/components/AddPanel/AddPanel.vue';
-  import PopupWin from '@/components/AddPanel/PopupWin.vue';
+import Vue from 'vue';
+import {Component} from 'vue-property-decorator';
+import DetailedLayout from '@/components/Detailed/DetailedLayout.vue';
+import RecordList from '@/components/Detailed/RecordList.vue';
+import TagPop from '@/components/Detailed/TagPop.vue';
+import Addition from '@/components/Detailed/Addition.vue';
+import AddPanel from '@/components/AddPanel/AddPanel.vue';
+import PopupWin from '@/components/AddPanel/PopupWin.vue';
+import service from '@/libs/http';
+import defaultType from '@/constant/defaultType';
 
-  @Component({
-    components: {TagPop, DetailedLayout, RecordList, Addition, AddPanel, PopupWin},
-  })
-  export default class Detailed extends Vue {
-    isAddPanel: boolean = true;
-    isPopupWin: boolean = false;
-    isMask: boolean = false;
-    ifAddPanel: boolean = false;
-    isType: boolean = false;
-    isTag: boolean = false;
+@Component({
+  components: {TagPop, DetailedLayout, RecordList, Addition, AddPanel, PopupWin},
+})
+export default class Detailed extends Vue {
+  isAddPanel: boolean = true;
+  isPopupWin: boolean = false;
+  isMask: boolean = false;
+  ifAddPanel: boolean = false;
+  isType: boolean = false;
+  isTag: boolean = false;
 
-    beforeCreate() {
+  async created() {
+    this.$store.commit('TagStore/modifyCurrentTag');
+    this.$store.commit('RecordStore/modifyFilterType');
+    this.$store.commit('RecordStore/modifyFilterDate');
+    await service.get('/tag/get', {
+      params: {
+        userId: localStorage.getItem('userId')
+      }
+    }).then(res => {
+      if (!res.data.tagsList) {
+        this.$store.commit('TagStore/setTagList', defaultType);
+      } else {
+        const userTagList = defaultType.concat(res.data.tagsList);
+        this.$store.commit('TagStore/setTagList', userTagList);
+      }
+      console.log(this.$store.state.TagStore.tagList)
+    }).catch(err => {
+      console.log(err);
+    });
+    await service.get('/record/get', {
+      params: {userId: localStorage.getItem('userId')}
+    }).then(res => {
+      window.localStorage.setItem('recordList', JSON.stringify(res.data.recordList));
       this.$store.commit('RecordStore/fetchRecords');
-    }
+    }).catch(err => {
+      console.log(err);
+    });
+  }
 
-    created() {
-      this.$store.commit('TagStore/modifyCurrentTag')
-      this.$store.commit('RecordStore/modifyFilterType')
-      this.$store.commit('RecordStore/modifyFilterDate')
+  closeAll() {
+    if (this.$route.params.id) {
+      this.$store.commit('RecordStore/cloneCurrentList');
+    } else {
+      this.$store.commit('RecordStore/clearRecord');
     }
+    this.isPopupWin = this.isMask = this.ifAddPanel = this.isType = this.isTag = false;
+    this.isAddPanel = true;
+  }
 
-    get currentType() {
-      return this.$store.state.TagStore.currentTag;
+  showAddPanel() {
+    if (!this.$route.params.id) {
+      this.$store.commit('RecordStore/clearRecord');
     }
+    this.ifAddPanel = true;
+    this.isMask = true;
+  }
 
-    closeAll() {
-      if (this.$route.params.id) {
-        // this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-        this.$store.commit('RecordStore/cloneCurrentList');
-      } else {
-        this.$store.commit('RecordStore/clearRecord');
-      }
-      this.isPopupWin = this.isMask = this.ifAddPanel = this.isType = this.isTag = false;
-      this.isAddPanel = true;
+  closeAdd(e: boolean) {
+    if (this.$route.params.id) {
+      this.$store.commit('RecordStore/cloneCurrentList');
+    } else {
+      this.$store.commit('RecordStore/clearRecord');
     }
+    this.isMask = this.ifAddPanel = e;
+    this.isAddPanel = !e;
+  }
 
-    showAddPanel() {
-      if (!this.$route.params.id) {
-        this.$store.commit('RecordStore/clearRecord');
-      }
-      this.ifAddPanel = true;
-      this.isMask = true;
-    }
+  openRemarkWin(e: boolean) {
+    this.isAddPanel = !e;
+    this.isPopupWin = e;
+  }
 
-    closeAdd(e: boolean) {
-      if (this.$route.params.id) {
-        // this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-        this.$store.commit('RecordStore/cloneCurrentList');
-      } else {
-        this.$store.commit('RecordStore/clearRecord');
-      }
-      this.isMask = this.ifAddPanel = e;
-      this.isAddPanel = !e;
-    }
+  closeNote(e: boolean) {
+    this.isAddPanel = !e;
+    this.isPopupWin = e;
+  }
 
-    openRemarkWin(e: boolean) {
-      this.isAddPanel = !e;
-      this.isPopupWin = e;
-    }
+  showType(e: boolean) {
+    this.isType = this.isMask = e;
+  }
 
-    closeNote(e: boolean) {
-      this.isAddPanel = !e;
-      this.isPopupWin = e;
-    }
+  closeType(e: boolean) {
+    this.isType = this.isMask = e;
+  }
 
-    showType(e: boolean) {
-      this.isType = this.isMask = e;
-    }
+  closeTag() {
+    this.isTag = false;
+    this.isAddPanel = true;
+  }
 
-    closeType(e: boolean) {
-      this.isType = this.isMask = e;
-    }
-
-    closeTag() {
-      this.isTag = false;
-      this.isAddPanel = true;
-    }
-
-    showAddTag() {
-      this.isAddPanel = false;
-      this.isTag = true;
-    }
-  };
+  showAddTag() {
+    this.isAddPanel = false;
+    this.isTag = true;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "../assets/style/helper.scss";
+@import "../assets/style/helper.scss";
 
-  .add {
-    @extend %outerShadow;
-    position: fixed;
-    bottom: 90px;
-    right: 20px;
-    z-index: 2;
-    border-radius: 50%;
-    background: #f6f6f6;
+.add {
+  @extend %outerShadow;
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 2;
+  border-radius: 50%;
+  background: #f6f6f6;
+}
+
+.mass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .7);
+  transition: all 0.2s ease-in;
+  z-index: 3;
+}
+
+.add-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: transparent;
+  z-index: 4;
+}
+
+.bottom-enter-active {
+  animation: .3s bottomInUp both ease-out;
+}
+
+.bottom-leave-active {
+  animation: .3s bottomOutDown both ease-in;
+}
+
+@keyframes bottomInUp {
+  0% {
+    transform: translate3d(0, 100%, 0);
+    visibility: visible;
   }
 
-  .mass {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .7);
-    transition: all 0.2s ease-in;
-    z-index: 3;
+  to {
+    transform: translateZ(0);
+  }
+}
+
+@keyframes bottomOutDown {
+  0% {
+    transform: translateZ(0);
   }
 
-  .add-wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    background-color: transparent;
-    z-index: 4;
+  to {
+    visibility: hidden;
+    transform: translate3d(0, 100%, 0);
   }
-
-  .bottom-enter-active {
-    animation: .3s bottomInUp both ease-out;
-  }
-
-  .bottom-leave-active {
-    animation: .3s bottomOutDown both ease-in;
-  }
-
-  @keyframes bottomInUp {
-    0% {
-      transform: translate3d(0, 100%, 0);
-      visibility: visible;
-    }
-
-    to {
-      transform: translateZ(0);
-    }
-  }
-
-  @keyframes bottomOutDown {
-    0% {
-      transform: translateZ(0);
-    }
-
-    to {
-      visibility: hidden;
-      transform: translate3d(0, 100%, 0);
-    }
-  }
+}
 </style>

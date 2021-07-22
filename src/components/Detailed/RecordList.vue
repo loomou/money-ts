@@ -67,10 +67,6 @@
   export default class RecordList extends Vue {
     type: string = 'pay';
 
-    beforeCreate() {
-      this.$store.commit('TagStore/fetchTags');
-    }
-
     get xxx() {
       return this.$store.getters['RecordStore/dateSort'];
     }
@@ -135,7 +131,9 @@
 
     findIcon(icon: string) {
       const def = clone(this.$store.state.TagStore.tagList as Tags[]);
-      return def.filter(t => t.id === icon)[0];
+      console.log(icon)
+      console.log(def.filter(t => t.id === icon)[0]);
+      return def.filter(t => t.id == icon)[0];
     }
   };
 </script>

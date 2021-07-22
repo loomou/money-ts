@@ -1,4 +1,3 @@
-import defaultRecord from '../constant/defaultRecord';
 import clone from '../libs/clone';
 import listId from '../libs/listId';
 import router from '../router';
@@ -10,8 +9,8 @@ import {MutationTree, Module, GetterTree} from 'vuex';
 const state: recordStoreState = {
   recordList: [],
   filterList: [],
-  setRecord: {icon: '-1', note: '', type: 'pay', amount: 0, createdAt: new Date(), id: ''},
-  currentList: {icon: '-1', note: '', type: 'pay', amount: 0, createdAt: new Date(), id: ''},
+  setRecord: {icon: '-1', note: '', type: 'pay', amount: 0, createdAt: new Date().toISOString(), id: ''},
+  currentList: {icon: '-1', note: '', type: 'pay', amount: 0, createdAt: new Date().toISOString(), id: ''},
   staType: 'pay',
   staDate: new Date(),
   headerDate: new Date(),
@@ -23,10 +22,7 @@ const mutations: MutationTree<recordStoreState> = {
   //获取数据
   fetchRecords(state) {
     state.recordList = JSON.parse(window.localStorage.getItem('recordList') || '[]');
-    if (state.recordList.length === 0) {
-      state.recordList = defaultRecord;
-      window.localStorage.setItem('recordList', JSON.stringify(state.recordList));
-    }
+    console.log(state.recordList);
     return state.recordList;
   },
 
@@ -98,7 +94,7 @@ const mutations: MutationTree<recordStoreState> = {
   },
 
   modifyFilterDate(state) {
-    state.filterDate = new Date()
+    state.filterDate = new Date().toISOString()
   },
 
   //读取需要编辑的数据

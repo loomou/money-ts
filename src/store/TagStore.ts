@@ -1,4 +1,3 @@
-import defaultType from '../constant/defaultType';
 import createId from '../libs/createId';
 import router from '../router';
 import {Tags, tagState} from '@/interfaces/tags';
@@ -13,12 +12,16 @@ const state: tagState = {
 };
 
 const mutations: MutationTree<tagState> = {
-  fetchTags(state) {
-    state.tagList = JSON.parse(window.localStorage.getItem('tagList') || '[]');
-    if (state.tagList.length === 0) {
-      state.tagList = defaultType;
-      window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
-    }
+  // fetchTags(state) {
+  //   state.tagList = JSON.parse(window.localStorage.getItem('tagList') || '[]');
+  //   if (state.tagList.length === 0) {
+  //     state.tagList = defaultType;
+  //     window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
+  //   }
+  // },
+
+  setTagList(state, payload) {
+    state.tagList = payload
   },
 
   createTag(state, payload: Tags) {

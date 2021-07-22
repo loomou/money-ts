@@ -6,7 +6,7 @@
           <use xlink:href="#icon-left-arrow"></use>
         </svg>
       </span>
-      <span class="title">请添加类型</span>
+      <span class="title">请选择类型</span>
     </header>
     <div class="tag-wrapper">
       <div class="all"
