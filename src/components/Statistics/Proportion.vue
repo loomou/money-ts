@@ -42,10 +42,6 @@
   export default class Proportion extends Vue {
     @Prop({default: 'pay'}) readonly SelectType!: string;
 
-    created() {
-      this.$store.commit('TagStore/fetchTags');
-    }
-
     get hhh() {
       if (!this.$store.state.RecordStore.recordList) return;
       const uuu = clone(this.$store.state.RecordStore.recordList as Record[])
@@ -60,7 +56,7 @@
         if (!(yyy in eee)) {
           eee[yyy] = {
             amount: 0,
-            category: this.$store.state.TagStore.tagList.find((c: Tags) => c.id === yyy),
+            category: this.$store.state.TagStore.tagList.find((c: Tags) => c.id == yyy),
             ratio: 0.0
           };
         }

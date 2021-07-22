@@ -22,7 +22,6 @@ const mutations: MutationTree<recordStoreState> = {
   //获取数据
   fetchRecords(state) {
     state.recordList = JSON.parse(window.localStorage.getItem('recordList') || '[]');
-    console.log(state.recordList);
     return state.recordList;
   },
 

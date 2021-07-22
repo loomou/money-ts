@@ -131,8 +131,6 @@
 
     findIcon(icon: string) {
       const def = clone(this.$store.state.TagStore.tagList as Tags[]);
-      console.log(icon)
-      console.log(def.filter(t => t.id === icon)[0]);
       return def.filter(t => t.id == icon)[0];
     }
   };

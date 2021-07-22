@@ -66,7 +66,6 @@ export default class Detailed extends Vue {
         const userTagList = defaultType.concat(res.data.tagsList);
         this.$store.commit('TagStore/setTagList', userTagList);
       }
-      console.log(this.$store.state.TagStore.tagList)
     }).catch(err => {
       console.log(err);
     });

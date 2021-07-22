@@ -29,7 +29,6 @@
     defaultAvatar = require('../../assets/img/default-avatar.png');
 
     changeImage(e: HTMLInputElement) {
-      console.log(e)
       this.$emit('changeImage', e);
     }
   };
