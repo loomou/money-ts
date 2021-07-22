@@ -33,10 +33,6 @@
     indexes: string | number = '-1';
     selectTags: string | number = '';
 
-    created() {
-      this.$store.commit('TagStore/fetchTags');
-    }
-
     mounted() {
       if (this.$route.params.id) {
         this.indexes = this.$store.state.RecordStore.currentList.icon;

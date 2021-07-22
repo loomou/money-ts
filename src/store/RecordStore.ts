@@ -37,16 +37,7 @@ const mutations: MutationTree<recordStoreState> = {
 
   //编剧数据
   updateRecord(state, updateRecord: Record) {
-    const recordId = updateRecord.id;
     state.currentList = updateRecord;
-    let setRecord = state.recordList.filter(t => t.id === recordId)[0];
-    setRecord.id = updateRecord.id;
-    setRecord.icon = updateRecord.icon;
-    setRecord.type = updateRecord.type;
-    setRecord.createdAt = updateRecord.createdAt;
-    setRecord.amount = updateRecord.amount;
-    setRecord.note = updateRecord.note;
-    window.localStorage.setItem('recordList', JSON.stringify(state.recordList));
   },
 
   removeList(state, id: String | number) {
@@ -97,8 +88,8 @@ const mutations: MutationTree<recordStoreState> = {
   },
 
   //读取需要编辑的数据
-  setCurrentRecord(state, id: string | number) {
-    state.currentList = state.recordList.filter(t => t.id === id)[0];
+  setCurrentRecord(state, id: Record) {
+    state.currentList = id;
   },
 
   cloneCurrentList(state) {

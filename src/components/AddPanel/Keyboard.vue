@@ -43,6 +43,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
+import service from '@/libs/http';
 
 @Component
 export default class Keyboard extends Vue {
@@ -109,11 +110,42 @@ export default class Keyboard extends Vue {
     if (this.$route.params.id) {
       this.$store.commit('RecordStore/setAmount', num);
       this.$store.commit('RecordStore/updateRecord', this.$store.state.RecordStore.setRecord);
+      const record = this.$store.state.RecordStore.setRecord;
+      service.post('/record/update', {
+        type: record.type,
+        note: record.note,
+        icon: record.icon,
+        amount: record.amount,
+        createdAt: record.createdAt,
+        userId: localStorage.getItem('userId'),
+        id: this.$route.params.id
+      }).then(res => {
+      }).catch(err => {
+        console.log(err);
+      });
       this.content = '修改成功';
     } else {
       this.$store.commit('RecordStore/setAmount', num);
-      this.$store.commit('RecordStore/createRecord', this.$store.state.RecordStore.setRecord);
-      this.$store.commit('RecordStore/modifyCurrentRecord');
+      const record = this.$store.state.RecordStore.setRecord;
+      service.post('/record/create', {
+        type: record.type,
+        note: record.note,
+        icon: record.icon,
+        amount: record.amount,
+        createdAt: record.createdAt,
+        userId: localStorage.getItem('userId')
+      }).then(res => {
+        service.get('/record/get', {
+          params: {userId: localStorage.getItem('userId')}
+        }).then(res => {
+          window.localStorage.setItem('recordList', JSON.stringify(res.data.recordList));
+          this.$store.commit('RecordStore/fetchRecords');
+        }).catch(err => {
+          console.log(err);
+        });
+      }).catch(err => {
+        console.log(err.response.data);
+      });
       this.content = '添加成功';
     }
     this.output = '0';

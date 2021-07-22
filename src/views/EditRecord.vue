@@ -8,7 +8,7 @@
         <span>修改记录</span>
       </router-link>
     </header>
-    <section class="edit-wrapper">
+    <section class="edit-wrapper" v-if="isShow">
       <div class="edit-win">
         <div class="type">
           <span class="icon-wrapper" :class="currentList.type === 'pay' ? 'pay' : 'income'">
@@ -17,20 +17,20 @@
             </svg>
           </span>
           <span class="type-name">
-            {{findIcon(currentList.icon).name}}
+            {{ findIcon(currentList.icon).name }}
           </span>
         </div>
         <h3 class="money">
-          {{currentList.type === 'pay' ? '-' : '+'}}{{currentList.amount.toFixed(2)}}
+          {{ currentList.type === 'pay' ? '-' : '+' }}{{ currentList.amount.toFixed(2) }}
         </h3>
         <div class="time-note">
           <div class="time">
             <span class="time-title">记录时间</span>
-            <span>{{formatDate(currentList.createdAt)}}</span>
+            <span>{{ formatDate(currentList.createdAt) }}</span>
           </div>
           <div class="note">
             <span class="note-title">备注</span>
-            <span>{{currentList.note}}</span>
+            <span>{{ currentList.note }}</span>
           </div>
         </div>
         <div class="edit-bar">
@@ -64,271 +64,303 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
-  import AddPanel from '@/components/AddPanel/AddPanel.vue';
-  import PopupWin from '@/components/AddPanel/PopupWin.vue';
-  import AddTag from '@/components/Label/AddTag.vue';
-  import dayjs from 'dayjs';
-  import clone from '@/libs/clone';
-  import {Record} from '@/interfaces/details';
+import Vue from 'vue';
+import {Component} from 'vue-property-decorator';
+import AddPanel from '@/components/AddPanel/AddPanel.vue';
+import PopupWin from '@/components/AddPanel/PopupWin.vue';
+import AddTag from '@/components/Label/AddTag.vue';
+import dayjs from 'dayjs';
+import clone from '@/libs/clone';
+import {Record} from '@/interfaces/details';
+import service from '@/libs/http';
+import defaultType from '@/constant/defaultType';
 
-  @Component({
-    components: {AddPanel, PopupWin, AddTag}
-  })
-  export default class EditRecord extends Vue {
-    isAddPanel: boolean = true;
-    isPopupWin: boolean = false;
-    isMask: boolean = false;
-    ifAddPanel: boolean = false;
-    isTag: boolean = false;
+@Component({
+  components: {AddPanel, PopupWin, AddTag}
+})
+export default class EditRecord extends Vue {
+  isAddPanel: boolean = true;
+  isPopupWin: boolean = false;
+  isMask: boolean = false;
+  ifAddPanel: boolean = false;
+  isTag: boolean = false;
+  isShow: boolean = false;
 
-    created() {
-      const id = this.$route.params.id;
-      this.$store.commit('RecordStore/fetchRecords');
-      this.$store.commit('TagStore/fetchTags');
-      this.$store.commit('RecordStore/setCurrentRecord', id);
+  created() {
+    const id = this.$route.params.id;
+    service.get('/tag/get', {
+      params: {
+        userId: localStorage.getItem('userId')
+      }
+    }).then(res => {
+      if (!res.data.tagsList) {
+        this.$store.commit('TagStore/setTagList', defaultType);
+      } else {
+        const userTagList = defaultType.concat(res.data.tagsList);
+        this.$store.commit('TagStore/setTagList', userTagList);
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+    service.post('/record/find', {
+      id: id,
+      userId: localStorage.getItem('userId')
+    }).then(res => {
+      this.$store.commit('RecordStore/setCurrentRecord', res.data.inf);
       this.$store.commit('RecordStore/cloneCurrentList');
-      if (!this.currentList) {
-        this.$router.replace('/404');
-      }
+      this.isShow = true;
+    }).catch(err => {
+      console.log(err);
+    });
+    if (!this.currentList) {
+      this.$router.replace('/404');
     }
+  }
 
-    get currentList() {
-      return this.$store.state.RecordStore.currentList;
-    }
+  get currentList() {
+    return this.$store.state.RecordStore.currentList;
+  }
 
-    get setList() {
-      return this.$store.state.RecordStore.setRecord;
-    }
+  get setList() {
+    return this.$store.state.RecordStore.setRecord;
+  }
 
-    formatDate(e: string | Date) {
-      return dayjs(e).format('YYYY年M月DD日 HH:mm:ss');
-    }
+  formatDate(e: string | Date) {
+    return dayjs(e).format('YYYY年M月DD日 HH:mm:ss');
+  }
 
-    remove() {
-      if (this.currentList) {
-        this.$store.commit('RecordStore/removeList', this.currentList.id);
-      }
+  remove() {
+    if (this.currentList) {
+      service.delete('/record/delete', {
+        params: {
+          id: this.$route.params.id,
+          userId: localStorage.getItem('userId')
+        }
+      }).then(res => {
+        this.$router.push('/detailed');
+      }).catch(err => {
+        console.log(err);
+      });
     }
+  }
 
-    findIcon(icon: string) {
-      const def = clone(this.$store.state.TagStore.tagList);
-      return def.filter((t: Record) => t.id === icon)[0];
-    }
+  findIcon(icon: string) {
+    const def = clone(this.$store.state.TagStore.tagList);
+    return def.filter((t: Record) => t.id == icon)[0];
+  }
 
-    closeAll() {
-      if (this.$route.params.id) {
-        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-      } else {
-        this.$store.commit('RecordStore/clearRecord');
-      }
-      this.isPopupWin = this.isMask = this.ifAddPanel = false;
-      this.isAddPanel = true;
+  closeAll() {
+    if (this.$route.params.id) {
+      this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+    } else {
+      this.$store.commit('RecordStore/clearRecord');
     }
+    this.isPopupWin = this.isMask = this.ifAddPanel = false;
+    this.isAddPanel = true;
+  }
 
-    showAddPanel() {
-      if (!this.$route.params.id) {
-        this.$store.commit('RecordStore/clearRecord');
-      }
-      this.ifAddPanel = true;
-      this.isMask = true;
+  showAddPanel() {
+    if (!this.$route.params.id) {
+      this.$store.commit('RecordStore/clearRecord');
     }
+    this.ifAddPanel = true;
+    this.isMask = true;
+  }
 
-    closeAdd(e: boolean) {
-      if (this.$route.params.id) {
-        this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
-      } else {
-        this.$store.commit('RecordStore/clearRecord');
-      }
-      this.isMask = this.ifAddPanel = e;
-      this.isAddPanel = !e;
+  closeAdd(e: boolean) {
+    if (this.$route.params.id) {
+      this.$store.state.RecordStore.setRecord = clone(this.$store.state.RecordStore.currentList);
+    } else {
+      this.$store.commit('RecordStore/clearRecord');
     }
+    this.isMask = this.ifAddPanel = e;
+    this.isAddPanel = !e;
+  }
 
-    openRemarkWin(e: boolean) {
-      this.isAddPanel = !e;
-      this.isPopupWin = e;
-    }
+  openRemarkWin(e: boolean) {
+    this.isAddPanel = !e;
+    this.isPopupWin = e;
+  }
 
-    closeNote(e: boolean) {
-      this.isAddPanel = !e;
-      this.isPopupWin = e;
-    }
+  closeNote(e: boolean) {
+    this.isAddPanel = !e;
+    this.isPopupWin = e;
+  }
 
-    closeTag() {
-      this.isTag = false;
-      this.isAddPanel = true;
-    }
+  closeTag() {
+    this.isTag = false;
+    this.isAddPanel = true;
+  }
 
-    showAddTag() {
-      this.isAddPanel = false;
-      this.isTag = true;
-    }
-  };
+  showAddTag() {
+    this.isAddPanel = false;
+    this.isTag = true;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-  .title-bar {
-    width: 100%;
-    padding: 15px 14px;
-    background: rgb(9, 114, 231);
-    text-align: center;
-    font-size: 18px;
+.title-bar {
+  width: 100%;
+  padding: 15px 14px;
+  background: rgb(9, 114, 231);
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+
+  .icon {
+    position: absolute;
     color: #fff;
-
-    .icon {
-      position: absolute;
-      color: #fff;
-      top: 19px;
-      left: 14px;
-    }
+    top: 19px;
+    left: 14px;
   }
+}
 
-  .edit-wrapper {
-    padding: 12px 12px;
+.edit-wrapper {
+  padding: 12px 12px;
 
-    .edit-win {
-      padding: 16px;
-      background: white;
-      border-radius: 8px;
-      text-align: center;
+  .edit-win {
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    text-align: center;
 
-      .type {
-        display: flex;
+    .type {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+
+      .icon-wrapper {
+        padding: 8px;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-top: 12px;
+        border-radius: 50%;
 
-        .icon-wrapper {
-          padding: 8px;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-
-          .icon {
-            fill: white;
-          }
-
-          &.pay {
-            background: rgb(9, 114, 231);
-          }
-
-          &.income {
-            background: rgb(240, 183, 57);
-          }
+        .icon {
+          fill: white;
         }
 
-        .type-name {
-          margin-left: 8px;
-          font-size: 14px;
+        &.pay {
+          background: rgb(9, 114, 231);
+        }
+
+        &.income {
+          background: rgb(240, 183, 57);
         }
       }
 
-      .money {
-        margin: 16px 0;
-        font-size: 1.8em;
-        font-weight: normal;
-        letter-spacing: 1px;
-      }
-
-      .time-note {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        margin-bottom: 26px;
+      .type-name {
+        margin-left: 8px;
         font-size: 14px;
+      }
+    }
 
-        .time {
-          margin-bottom: 10px;
+    .money {
+      margin: 16px 0;
+      font-size: 1.8em;
+      font-weight: normal;
+      letter-spacing: 1px;
+    }
 
-          .time-title {
-            display: inline-block;
-            width: 100px;
-            text-align: left;
-            padding-left: 10px;
-            color: rgb(144, 147, 153);
-          }
-        }
+    .time-note {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 26px;
+      font-size: 14px;
 
-        .note {
-          .note-title {
-            display: inline-block;
-            width: 100px;
-            text-align: left;
-            padding-left: 10px;
-            color: rgb(144, 147, 153);
-          }
+      .time {
+        margin-bottom: 10px;
+
+        .time-title {
+          display: inline-block;
+          width: 100px;
+          text-align: left;
+          padding-left: 10px;
+          color: rgb(144, 147, 153);
         }
       }
 
-      .edit-bar {
-        display: flex;
-        padding: 16px 0 0;
-        border-top: 1px solid rgb(198, 198, 198);
-
-        span {
-          flex-grow: 1;
-        }
-
-        .delete {
-          color: red;
-          border-right: 1px solid rgb(198, 198, 198);
+      .note {
+        .note-title {
+          display: inline-block;
+          width: 100px;
+          text-align: left;
+          padding-left: 10px;
+          color: rgb(144, 147, 153);
         }
       }
     }
-  }
 
-  .add-wrapper {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    background-color: transparent;
-    z-index: 4;
-  }
+    .edit-bar {
+      display: flex;
+      padding: 16px 0 0;
+      border-top: 1px solid rgb(198, 198, 198);
 
-  .mass {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .7);
-    transition: all 0.2s ease-in;
-    z-index: 3;
-  }
+      span {
+        flex-grow: 1;
+      }
 
-  .bottom-enter-active {
-    animation: .3s bottomInUp both ease-out;
-  }
-
-  .bottom-leave-active {
-    animation: .3s bottomOutDown both ease-in;
-  }
-
-  @keyframes bottomInUp {
-    0% {
-      transform: translate3d(0, 100%, 0);
-      visibility: visible;
-    }
-
-    to {
-      transform: translateZ(0);
+      .delete {
+        color: red;
+        border-right: 1px solid rgb(198, 198, 198);
+      }
     }
   }
+}
 
-  @keyframes bottomOutDown {
-    0% {
-      transform: translateZ(0);
-    }
+.add-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: transparent;
+  z-index: 4;
+}
 
-    to {
-      visibility: hidden;
-      transform: translate3d(0, 100%, 0);
-    }
+.mass {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .7);
+  transition: all 0.2s ease-in;
+  z-index: 3;
+}
+
+.bottom-enter-active {
+  animation: .3s bottomInUp both ease-out;
+}
+
+.bottom-leave-active {
+  animation: .3s bottomOutDown both ease-in;
+}
+
+@keyframes bottomInUp {
+  0% {
+    transform: translate3d(0, 100%, 0);
+    visibility: visible;
   }
+
+  to {
+    transform: translateZ(0);
+  }
+}
+
+@keyframes bottomOutDown {
+  0% {
+    transform: translateZ(0);
+  }
+
+  to {
+    visibility: hidden;
+    transform: translate3d(0, 100%, 0);
+  }
+}
 
 </style>
