@@ -63,7 +63,6 @@
       vertical-align: top;
       cursor: pointer;
       text-align: center;
-      -webkit-transition: all 250ms ease;
       transition: all 250ms ease;
     }
 

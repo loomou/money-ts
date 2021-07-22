@@ -129,7 +129,6 @@
     .pay-account {
       display: flex;
       align-items: flex-start;
-      -webkit-box-pack: center;
       justify-content: center;
       font-weight: 500;
       font-size: 22px;

@@ -47,17 +47,13 @@
 <style lang="scss" scoped>
   .title {
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
-    -webkit-box-pack: justify;
     justify-content: space-between;
     font-size: 14px;
 
     .btn {
       display: inline-flex;
-      -webkit-box-align: center;
       align-items: center;
-      -webkit-box-pack: center;
       justify-content: center;
       padding: 2px 8px;
       outline: none;

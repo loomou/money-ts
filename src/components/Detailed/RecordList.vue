@@ -143,7 +143,6 @@
 <style lang="scss" scoped>
   .detailed-container {
     padding: 8px;
-    -webkit-box-flex: 1;
     flex-grow: 1;
     overflow: auto;
 
@@ -175,9 +174,7 @@
       .date-header {
         padding: 22px 18px;
         display: flex;
-        -webkit-box-pack: justify;
         justify-content: space-between;
-        -webkit-box-align: center;
         font-size: 14px;
         align-items: center;
         background: rgb(251, 251, 251);
@@ -188,7 +185,6 @@
 
         .date-pay-income {
           display: flex;
-          -webkit-box-align: center;
           align-items: center;
           color: rgb(96, 98, 102);
 
@@ -196,9 +192,7 @@
             width: 1.5em;
             height: 1.5em;
             display: inline-flex;
-            -webkit-box-align: center;
             align-items: center;
-            -webkit-box-pack: center;
             justify-content: center;
             margin: 4px;
             background: rgb(244, 244, 244);
@@ -225,9 +219,7 @@
           height: 40px;
           padding: 8px;
           display: inline-flex;
-          -webkit-box-align: center;
           align-items: center;
-          -webkit-box-pack: center;
           justify-content: center;
           border-radius: 50%;
 
@@ -245,7 +237,6 @@
         }
 
         .record-content {
-          -webkit-box-flex: 1;
           flex-grow: 1;
           padding: 0 20px 0 12px;
         }

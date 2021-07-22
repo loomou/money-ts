@@ -74,9 +74,7 @@ export default class AddPanel extends Vue {
 
   .add-header {
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
-    -webkit-box-pack: justify;
     justify-content: space-between;
     padding: 16px;
     border-bottom: 1px solid rgb(238, 238, 238);

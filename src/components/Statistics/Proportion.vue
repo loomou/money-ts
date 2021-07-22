@@ -86,18 +86,14 @@
 
       span {
         display: inline-flex;
-        -webkit-box-align: center;
         align-items: center;
       }
 
       .icon-content {
         padding: 8px;
         display: inline-flex;
-        -webkit-box-align: center;
         align-items: center;
-        -webkit-box-pack: center;
         justify-content: center;
-        /*background: rgb(9, 114, 231);*/
         border-radius: 50%;
 
         .icon {
@@ -120,16 +116,12 @@
       }
 
       .radio-wrapper {
-        -webkit-box-pack: end;
         text-align: right;
-        -webkit-box-flex: 1;
         flex-grow: 1;
 
         .radio-content {
           display: inline-flex;
-          -webkit-box-align: center;
           align-items: center;
-          -webkit-box-pack: center;
           justify-content: center;
 
           .radio-num {

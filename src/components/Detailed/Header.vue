@@ -96,7 +96,7 @@
 
     .type-box {
       display: inline-block;
-      margin-top: 26px;
+      margin-top: 20px;
       padding: 5px 10px;
       color: rgba(246, 246, 246, 0.9);
       background: rgba(243, 242, 242, 0.15);
@@ -104,7 +104,6 @@
       outline: none;
       border-radius: 4px;
       font-size: 14px;
-
     }
   }
 
@@ -115,7 +114,6 @@
 
     .month {
       display: inline-flex;
-      -webkit-box-align: center;
       align-items: center;
       padding: 8px 16px;
       color: rgb(237, 245, 237);

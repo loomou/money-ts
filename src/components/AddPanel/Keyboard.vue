@@ -171,7 +171,6 @@ export default class Keyboard extends Vue {
 
   .output {
     padding-left: 8px;
-    -webkit-box-flex: 1;
     flex-grow: 1;
     border: none;
     outline: none;

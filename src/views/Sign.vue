@@ -34,8 +34,6 @@ export default class Sign extends Vue {
     }
   }
 
-
-
   changeCom(e: any) {
     this.isComponent = e;
   }

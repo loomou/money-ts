@@ -108,14 +108,11 @@
   .select-bar {
     padding: 16px;
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
 
     .select {
       display: inline-flex;
-      -webkit-box-align: center;
       align-items: center;
-      -webkit-box-pack: center;
       justify-content: center;
       padding: 4px 12px;
       outline: none;

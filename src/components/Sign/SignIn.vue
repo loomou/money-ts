@@ -88,8 +88,6 @@ export default class SignIn extends Vue {
   flex-direction: column;
 
   input {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
     border: 1px solid #ddd;

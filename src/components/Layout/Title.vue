@@ -17,9 +17,8 @@
   .title-bar {
     padding: 15px 14px;
     width: 100%;
-    height: 50px;
     background: rgb(9, 114, 231);
-    font-size: 20px;
+    font-size: 18px;
     color: #fff;
 
     .title {

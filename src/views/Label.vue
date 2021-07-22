@@ -129,21 +129,17 @@
 
   .title-bar {
     width: 100%;
-    height: 50px;
+    padding: 15px 14px;
     background: rgb(9, 114, 231);
-    top: 0;
-    left: 0;
     text-align: center;
-    line-height: 49px;
     font-size: 18px;
     color: #fff;
-    z-index: 1;
 
     .icon {
       position: absolute;
       color: #fff;
-      top: 13.5px;
-      left: 20px;
+      top: 19px;
+      left: 14px;
     }
   }
 

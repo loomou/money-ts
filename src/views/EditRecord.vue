@@ -5,6 +5,7 @@
         <svg class="icon">
           <use xlink:href="#icon-left-arrow"></use>
         </svg>
+        <span>修改记录</span>
       </router-link>
     </header>
     <section class="edit-wrapper">
@@ -169,21 +170,17 @@
 <style lang="scss" scoped>
   .title-bar {
     width: 100%;
-    height: 50px;
+    padding: 15px 14px;
     background: rgb(9, 114, 231);
-    top: 0;
-    left: 0;
     text-align: center;
-    line-height: 49px;
     font-size: 18px;
     color: #fff;
-    z-index: 3;
 
     .icon {
       position: absolute;
       color: #fff;
-      top: 16px;
-      left: 20px;
+      top: 19px;
+      left: 14px;
     }
   }
 
@@ -198,18 +195,14 @@
 
       .type {
         display: flex;
-        -webkit-box-align: center;
         align-items: center;
-        -webkit-box-pack: center;
         justify-content: center;
         margin-top: 12px;
 
         .icon-wrapper {
           padding: 8px;
           display: inline-flex;
-          -webkit-box-align: center;
           align-items: center;
-          -webkit-box-pack: center;
           justify-content: center;
           border-radius: 50%;
 
@@ -275,7 +268,6 @@
         border-top: 1px solid rgb(198, 198, 198);
 
         span {
-          -webkit-box-flex: 1;
           flex-grow: 1;
         }
 

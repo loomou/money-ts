@@ -67,23 +67,19 @@
   .types-list {
     padding: 24px;
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
     overflow-x: scroll;
 
     .type {
       display: flex;
       flex-direction: column;
-      -webkit-box-align: center;
       align-items: center;
       margin-right: 16px;
 
       .icon-bar {
         padding: 8px;
         display: inline-flex;
-        -webkit-box-align: center;
         align-items: center;
-        -webkit-box-pack: center;
         justify-content: center;
         background: rgb(236, 236, 236);
         border-radius: 50%;

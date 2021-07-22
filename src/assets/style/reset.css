@@ -1,46 +1,57 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 a {
   text-decoration: none;
-  color: inherit; }
+  color: inherit;
+}
 
 ul, ol {
-  list-style: none; }
+  list-style: none;
+}
 
 li {
   display: list-item;
-  text-align: -webkit-match-parent; }
+  text-align: -webkit-match-parent;
+}
 
 button, input {
-  font: inherit; }
+  font: inherit;
+}
 
 a, button {
   cursor: pointer;
   border: none;
-  outline: none; }
+  outline: none;
+}
 
 :focus {
-  outline: none; }
+  outline: none;
+}
 
 h1, h2, h3, h4, h5, h6 {
-  font-weight: normal; }
+  font-weight: normal;
+}
 
 section {
-  display: block; }
+  display: block;
+}
 
 .icon {
   width: 1em;
   height: 1em;
   vertical-align: -0.15em;
   fill: currentColor;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
-  color: transparent; }
+  color: transparent;
+}
 
 /*# sourceMappingURL=reset.css.map */
