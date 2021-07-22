@@ -7,12 +7,13 @@ const state:Profile = {
 };
 
 const mutations:MutationTree<Profile> = {
-  fetchProfile(state) {
+  fetchProfile(state, e) {
     const storedProfile = window.localStorage.getItem('profile');
+
     const defaultProfile = {
-      displayName: undefined,
-      avatar: undefined,
-      gender: "男",
+      displayName: e.nickname ? e.nickname : undefined,
+      avatar: storedProfile ? JSON.parse(storedProfile).avatar : undefined,
+      gender: e.gender ? e.gender : "男",
     };
 
     state.profile = typeof storedProfile === 'string' ? JSON.parse(storedProfile) : defaultProfile;

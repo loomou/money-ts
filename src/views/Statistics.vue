@@ -39,7 +39,6 @@ import defaultType from '@/constant/defaultType';
 })
 export default class Statistics extends Vue {
   type: string = 'pay';
-  monthSel: Date = new Date();
   isShow: Boolean = false;
 
   async created() {
