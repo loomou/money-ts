@@ -11,7 +11,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('AuthToken');
     if (token) {
       config.headers.Authorization = token;
     }
@@ -31,6 +31,12 @@ service.interceptors.response.use(
     if (error.response.status === 401) {
       localStorage.removeItem('AuthToken');
       router.push('/sign');
+    }
+    if (error.response.status === 400) {
+      if (error.response.data.code === 1111) {
+        localStorage.clear()
+        router.push('/sign')
+      }
     }
     return Promise.reject(error);
   }
