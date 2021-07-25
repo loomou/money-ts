@@ -139,7 +139,7 @@ const getters: GetterTree<recordStoreState, Record> = {
     const ddd = clone(state.recordList);
     state.filterList = ddd.filter((t: Record) => {
       if (state.filterType === 'All') return true;
-      return t.icon === state.filterType;
+      return t.icon == state.filterType;
     }).filter((y: Record) => {
       if (dayjs(state.filterDate).isSame((new Date()), 'month')) return true;
       return dayjs(y.createdAt).isSame(dayjs(state.filterDate), 'month');

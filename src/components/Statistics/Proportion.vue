@@ -75,6 +75,7 @@
     margin-top: 32px;
     list-style: none;
     font-size: 12px;
+    overflow-x: scroll;
 
     .pro-content {
       display: flex;
@@ -123,7 +124,7 @@
           .radio-num {
             color: rgb(144, 147, 153);
             font-size: 10px;
-            width: 50px;
+            width: 40px;
             margin-right: 5px;
           }
         }

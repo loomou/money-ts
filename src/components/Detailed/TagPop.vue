@@ -11,7 +11,8 @@
     <div class="tag-wrapper">
       <div class="all"
            @click="ooo('All')"
-           :class="xxx === 'All' && 'selected'">全部类型</div>
+           :class="xxx === 'All' && 'selected'">全部类型
+      </div>
       <div class="pi">支出</div>
       <span v-for="payTag in payList"
             :key="payTag.id"
@@ -19,7 +20,7 @@
             @click="ooo(payTag.id)"
             :class="xxx === payTag.id && 'selected'">
         <span>
-          {{payTag.name}}
+          {{ payTag.name }}
         </span>
       </span>
       <div class="pi">收入</div>
@@ -30,7 +31,7 @@
               @click="ooo(incomeTag.id)"
               :class="xxx === incomeTag.id && 'selected'">
         <span>
-          {{incomeTag.name}}
+          {{ incomeTag.name }}
         </span>
       </span>
       </div>
@@ -39,121 +40,119 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
-  import clone from "../../libs/clone";
-  import {Record} from '@/interfaces/details';
+import Vue from 'vue';
+import {Component} from 'vue-property-decorator';
+import clone from '../../libs/clone';
+import {Record} from '@/interfaces/details';
 
-  @Component
-  export default class TagPop extends Vue{
-    created() {
-      this.$store.commit('TagStore/fetchTags');
-    }
+@Component
+export default class TagPop extends Vue {
+  get payList() {
+    return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'pay');
+  }
 
-    get payList() {
-      return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'pay');
-    }
-    get incomeList() {
-      return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'income');
-    }
-    get xxx() {
-      return this.$store.state.RecordStore.filterType
-    }
+  get incomeList() {
+    return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'income');
+  }
 
-    ooo(tagId:string) {
-      this.$store.commit('RecordStore/queryType', tagId)
-      this.$emit('closeTypeSelect',false)
-    }
+  get xxx() {
+    return this.$store.state.RecordStore.filterType;
+  }
 
-    closeTags() {
-      this.$emit('closeTypeSelect',false)
-    }
-  };
+  ooo(tagId: string) {
+    this.$store.commit('RecordStore/queryType', tagId);
+    this.$emit('closeTypeSelect', false);
+  }
+
+  closeTags() {
+    this.$emit('closeTypeSelect', false);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-  .remarkTag {
-    position: fixed;
-    bottom: 0;
-    left: 0;
+.remarkTag {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background: rgb(250, 250, 250);
+  border-radius: 10px 10px 0 0;
+  z-index: 8;
+
+  .remarkHeader {
     width: 100%;
-    height: auto;
-    background: rgb(250, 250, 250);
-    border-radius: 10px 10px 0 0;
-    z-index: 8;
+    padding: 10px;
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid rgb(230, 230, 230);
 
-    .remarkHeader {
-      width: 100%;
-      padding: 10px;
-      font-size: 20px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      border-bottom: 1px solid rgb(230, 230, 230);
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
 
-      .icon {
-        width: 20px;
-        height: 20px;
-      }
+    .title {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
 
-      .title {
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%, 0);
-      }
+    .ok {
+      padding-right: 5px;
+      font-size: 16px;
+      color: rgb(9, 114, 231);
+    }
+  }
+}
 
-      .ok {
-        padding-right: 5px;
-        font-size: 16px;
-        color: rgb(9, 114, 231);
-      }
+.tag-wrapper {
+  height: 300px;
+  padding: 3px;
+  overflow-y: scroll;
+
+  .all {
+    display: inline-flex;
+    width: 31.6%;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-left: 6px;
+    background: white;
+
+    &.selected {
+      background: rgb(9, 114, 231);
+      color: white;
     }
   }
 
-  .tag-wrapper {
-    height: 300px;
-    padding: 3px;
-    overflow-y: scroll;
+  .pi {
+    width: 100%;
+    font-size: 14px;
+    margin: 10px 20px;
+    color: rgb(150, 150, 150);
+  }
 
-    .all {
-      display: inline-flex;
-      width: 31.6%;
-      height: 40px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 10px;
-      margin-left: 6px;
-      background: white;
+  .tag-name {
+    display: inline-flex;
+    width: 31.5%;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    margin: 3px;
+    background: white;
+    border-radius: 5px;
 
-      &.selected {
-        background: rgb(9, 114, 231);
-        color: white;
-      }
-    }
-
-    .pi {
-      width: 100%;
-      font-size: 14px;
-      margin: 10px 20px;
-      color: rgb(150, 150, 150);
-    }
-
-    .tag-name {
-      display: inline-flex;
-      width: 31.5%;
-      height: 40px;
-      align-items: center;
-      justify-content: center;
-      margin: 3px;
-      background: white;
-      border-radius: 5px;
-
-      &.selected {
-        background: rgb(9, 114, 231);
-        color: white;
-      }
+    &.selected {
+      background: rgb(9, 114, 231);
+      color: white;
     }
   }
+}
 </style>
