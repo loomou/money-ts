@@ -68,23 +68,23 @@ const mutations: MutationTree<recordStoreState> = {
   },
 
   modifyCurrentRecord(state) {
-    state.currentList = state.setRecord
+    state.currentList = state.setRecord;
   },
 
   modifyStaDate(state) {
-    state.staDate = new Date()
+    state.staDate = new Date();
   },
 
   modifyStaType(state) {
-    state.staType = 'pay'
+    state.staType = 'pay';
   },
 
   modifyFilterType(state) {
-    state.filterType = 'All'
+    state.filterType = 'All';
   },
 
   modifyFilterDate(state) {
-    state.filterDate = new Date().toISOString()
+    state.filterDate = new Date().toISOString();
   },
 
   //读取需要编辑的数据

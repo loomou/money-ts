@@ -25,7 +25,7 @@
     </form>
     <span>{{ confirmMessage }}</span>
     <input type="text"
-           placeholder="内测码"
+           placeholder="内测码：qwer"
            @keyup.enter="signUp"
            v-model="check">
     <span>{{ checkMessage }}</span>

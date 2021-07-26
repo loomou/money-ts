@@ -11,7 +11,7 @@ export interface TypeDate {
 }
 
 export interface GetterDate {
-  dateSort: {title: string, items: Record[]}[] | undefined
+  dateSort: { title: string, items: Record[] }[] | undefined
 }
 
 export interface GetterMonth {

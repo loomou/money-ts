@@ -48,11 +48,11 @@ import {Record} from '@/interfaces/details';
 @Component
 export default class TagPop extends Vue {
   get payList() {
-    return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'pay');
+    return clone(this.$store.state.TagStore.tagList).filter((item: Record) => item.type === 'pay');
   }
 
   get incomeList() {
-    return clone(this.$store.state.TagStore.tagList).filter((t: Record) => t.type === 'income');
+    return clone(this.$store.state.TagStore.tagList).filter((item: Record) => item.type === 'income');
   }
 
   get xxx() {

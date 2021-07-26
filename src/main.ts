@@ -1,23 +1,22 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import dayjs from "dayjs";
-import Nav from './components/Layout/Nav.vue'
-import Title from './components/Layout/Title.vue'
-import Layout from './components/Layout/Layout.vue'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import dayjs from 'dayjs';
+import Nav from './components/Layout/Nav.vue';
+import Title from './components/Layout/Title.vue';
+import Layout from './components/Layout/Layout.vue';
 import {DatetimePicker, Popup, Dialog} from 'vant';
 import 'vant/lib/datetime-picker/style';
 import 'vant/lib/popup/style';
 import './libs/svg/svg.js';
-import 'vant/lib/dialog/style'
+import 'vant/lib/dialog/style';
 
 
-
-const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
-const isToday = require('dayjs/plugin/isToday')
-dayjs.extend(isSameOrBefore)
-dayjs.extend(isToday)
+const isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
+const isToday = require('dayjs/plugin/isToday');
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isToday);
 
 Vue.use(DatetimePicker);
 Vue.use(Popup);
@@ -26,13 +25,13 @@ Vue.component('Navs', Nav);
 Vue.component('Titles', Title);
 Vue.component('Layout', Layout);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
 
 window.onload = function () {
   setTimeout(function () {

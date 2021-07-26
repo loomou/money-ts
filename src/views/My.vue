@@ -20,7 +20,7 @@ import service from '@/libs/http';
   components: {MyInf, LabelSet, Toast}
 })
 export default class My extends Vue {
-  isShow: Boolean = false
+  isShow: Boolean = false;
 
   created() {
     service.post('/user/find', {
@@ -28,8 +28,8 @@ export default class My extends Vue {
     }).then(res => {
       this.$store.commit('FileStore/fetchProfile', res.data.inf);
       this.$nextTick(function () {
-        this.isShow = true
-      })
+        this.isShow = true;
+      });
     }).catch(err => {
       console.log(err);
     });

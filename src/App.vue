@@ -5,15 +5,15 @@
 </template>
 
 <style lang="scss">
-  @import "./assets/style/reset.scss";
-  @import "./assets/style/helper.scss";
+@import "./assets/style/reset.scss";
+@import "./assets/style/helper.scss";
 
-  body {
-    -webkit-font-smoothing: antialiased;
-    color: #333;
-    line-height: 1.5;
-    font-family: $font-hei;
-    font-size: 16px;
-    background: #f5f5f5;
-  }
+body {
+  -webkit-font-smoothing: antialiased;
+  color: #333;
+  line-height: 1.5;
+  font-family: $font-hei;
+  font-size: 16px;
+  background: #f5f5f5;
+}
 </style>

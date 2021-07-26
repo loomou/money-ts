@@ -30,45 +30,45 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {Component} from 'vue-property-decorator';
+import Vue from 'vue';
+import {Component} from 'vue-property-decorator';
 
-  @Component
-  export default class MonthDetail extends Vue {
-  };
+@Component
+export default class MonthDetail extends Vue {
+};
 </script>
 
 <style lang="scss" scoped>
-  .month-bill-wrapper {
+.month-bill-wrapper {
+  width: 100%;
+  padding: 10px 20px;
+  background: #fff;
+  margin-top: 10px;
+  font-size: 14px;
+
+  .bill-header {
     width: 100%;
-    padding: 10px 20px;
-    background: #fff;
-    margin-top: 10px;
-    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
 
-    .bill-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-
-      .icon {
-        fill: #b5b5b5;
-      }
-    }
-
-    .bill {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-
-      .amount {
-        font-weight: 600;
-      }
-
-      .green {
-        color: #28a745;
-      }
+    .icon {
+      fill: #b5b5b5;
     }
   }
+
+  .bill {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+
+    .amount {
+      font-weight: 600;
+    }
+
+    .green {
+      color: #28a745;
+    }
+  }
+}
 </style>

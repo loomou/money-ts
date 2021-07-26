@@ -1,5 +1,5 @@
-import axios from "axios";
-import router from "@/router";
+import axios from 'axios';
+import router from '@/router';
 
 const service = axios.create({
   baseURL: 'http://120.78.197.160:8080/api',
@@ -25,7 +25,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   response => {
-    return response
+    return response;
   },
   error => {
     if (error.response.status === 401) {
@@ -34,8 +34,8 @@ service.interceptors.response.use(
     }
     if (error.response.status === 400) {
       if (error.response.data.code === 1111) {
-        localStorage.clear()
-        router.push('/sign')
+        localStorage.clear();
+        router.push('/sign');
       }
     }
     return Promise.reject(error);

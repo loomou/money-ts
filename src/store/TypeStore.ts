@@ -5,9 +5,9 @@ const state: Type = {
   typePick: 'pay'
 };
 
-const mutations:MutationTree<Type> = {
-  typeOption(state, e: string) {
-    state.typePick = e;
+const mutations: MutationTree<Type> = {
+  typeOption(state, type: string) {
+    state.typePick = type;
   },
 
   setTypeVal(state, val: string) {
@@ -15,7 +15,7 @@ const mutations:MutationTree<Type> = {
   }
 };
 
-export const TypeStore:Module<Type, any> = {
+export const TypeStore: Module<Type, any> = {
   namespaced: true,
   state,
   mutations

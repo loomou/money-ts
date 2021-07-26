@@ -12,16 +12,8 @@ const state: tagState = {
 };
 
 const mutations: MutationTree<tagState> = {
-  // fetchTags(state) {
-  //   state.tagList = JSON.parse(window.localStorage.getItem('tagList') || '[]');
-  //   if (state.tagList.length === 0) {
-  //     state.tagList = defaultType;
-  //     window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
-  //   }
-  // },
-
   setTagList(state, payload) {
-    state.tagList = payload
+    state.tagList = payload;
   },
 
   createTag(state, payload: Tags) {
@@ -36,17 +28,6 @@ const mutations: MutationTree<tagState> = {
 
   setFilterTag(state, type: string) {
     state.filterTag = state.tagList.filter(t => t.type === type);
-  },
-
-  updateTag(state, payload: Tags) {
-    const {id, name, icon, type} = payload;
-    const tag = state.tagList.filter(item => item.id === id)[0];
-    tag.name = name;
-    tag.id = id;
-    tag.icon = icon;
-    tag.type = type;
-    window.localStorage.setItem('tagList', JSON.stringify(state.tagList));
-    router.back();
   },
 
   removeTag(state, id: string | number) {

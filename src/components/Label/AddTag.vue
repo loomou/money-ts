@@ -10,173 +10,173 @@
                maxlength="4"
                @input="inputNum($event.target.value)">
       </label>
-      <div style="color: #b5b5b5;margin-top: 5px">{{num}}/4</div>
+      <div style="color: #b5b5b5;margin-top: 5px">{{ num }}/4</div>
     </div>
     <div class="btn">
       <button @click="emitClose">取消</button>
       <button @click="addType">确认</button>
     </div>
     <div class="tip" v-if="showWarn">
-      <div class="warning">{{warnContent}}</div>
+      <div class="warning">{{ warnContent }}</div>
     </div>
     <div class="tip-mass" v-if="showMask"></div>
   </div>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import {Component, Prop} from 'vue-property-decorator';
-  import {Tags} from '@/interfaces/tags';
-  import service from '@/libs/http';
-  import defaultType from '@/constant/defaultType';
+import Vue from 'vue';
+import {Component, Prop} from 'vue-property-decorator';
+import {Tags} from '@/interfaces/tags';
+import service from '@/libs/http';
+import defaultType from '@/constant/defaultType';
 
-  @Component
-  export default class AddTag extends Vue {
-    @Prop({type: String, default: 'pay', required: true}) readonly selectType!: string;
-    num: number = 0;
-    inputContent: String = '';
-    showWarn: boolean = false;
-    showMask: boolean = false;
-    warnContent: string = '';
+@Component
+export default class AddTag extends Vue {
+  @Prop({type: String, default: 'pay', required: true}) readonly selectType!: string;
+  num: number = 0;
+  inputContent: String = '';
+  showWarn: boolean = false;
+  showMask: boolean = false;
+  warnContent: string = '';
 
-    emitClose() {
-      this.$emit('emitClose');
-    }
-
-    addType() {
-      if (this.inputContent.length === 0) {
-        this.warnContent = '类型名不能空';
-        this.showWarn = this.showMask = true;
-        setTimeout(() => {
-          this.showWarn = this.showMask = false;
-        }, 1000);
-        return;
-      }
-      const names = this.$store.state.TagStore.tagList.map((item: Tags) => item.name);
-      if (names.indexOf(this.inputContent) >= 0) {
-        this.warnContent = '类型名已存在';
-        this.showWarn = this.showMask = true;
-        setTimeout(() => {
-          this.showWarn = this.showMask = false;
-        }, 1000);
-        return;
-      }
-      service.post('/tag/create', {
-        userId: localStorage.getItem('userId'),
-        name: this.inputContent,
-        type: this.selectType,
-        icon: 'other'
-      }).then(res => {
-        service.get('/tag/get', {
-          params: {
-            userId: localStorage.getItem('userId')
-          }
-        }).then(res => {
-          if (!res.data.tagsList) {
-            this.$store.commit('TagStore/setTagList', defaultType);
-          } else {
-            const userTagList = defaultType.concat(res.data.tagsList);
-            this.$store.commit('TagStore/setTagList', userTagList);
-          }
-        }).catch(err => {
-          console.log(err);
-        });
-      }).catch(err => {
-        console.log(err.data);
-      });
-      this.$emit('open');
-    }
-
-    inputNum(e: string) {
-      this.inputContent = e;
-      this.num = e.length;
-    }
+  emitClose() {
+    this.$emit('emitClose');
   }
+
+  addType() {
+    if (this.inputContent.length === 0) {
+      this.warnContent = '类型名不能空';
+      this.showWarn = this.showMask = true;
+      setTimeout(() => {
+        this.showWarn = this.showMask = false;
+      }, 1000);
+      return;
+    }
+    const names = this.$store.state.TagStore.tagList.map((item: Tags) => item.name);
+    if (names.indexOf(this.inputContent) >= 0) {
+      this.warnContent = '类型名已存在';
+      this.showWarn = this.showMask = true;
+      setTimeout(() => {
+        this.showWarn = this.showMask = false;
+      }, 1000);
+      return;
+    }
+    service.post('/tag/create', {
+      userId: localStorage.getItem('userId'),
+      name: this.inputContent,
+      type: this.selectType,
+      icon: 'other'
+    }).then(res => {
+      service.get('/tag/get', {
+        params: {
+          userId: localStorage.getItem('userId')
+        }
+      }).then(res => {
+        if (!res.data.tagsList) {
+          this.$store.commit('TagStore/setTagList', defaultType);
+        } else {
+          const userTagList = defaultType.concat(res.data.tagsList);
+          this.$store.commit('TagStore/setTagList', userTagList);
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    }).catch(err => {
+      console.log(err.data);
+    });
+    this.$emit('open');
+  }
+
+  inputNum(e: string) {
+    this.inputContent = e;
+    this.num = e.length;
+  }
+}
 </script>
 
 <style lang="scss" scoped>
-  .add-win {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    z-index: 5;
+.add-win {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 5;
+  overflow: hidden;
+  font-size: 16px;
+  background-color: #fff;
+  border-radius: 16px 16px 0 0;
+
+  .win-title {
+    padding: 15px;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  .win-input {
+    margin: 10px 25px 10px 25px;
+
+    input {
+      width: 100%;
+      border: none;
+      border-radius: 0;
+      border-bottom: 1px solid rgba(114, 114, 114, 0.4);
+    }
+
+    ::-webkit-input-placeholder {
+      color: #999;
+      font-size: 14px;
+    }
+  }
+
+  .btn {
+    display: flex;
     overflow: hidden;
-    font-size: 16px;
-    background-color: #fff;
-    border-radius: 16px 16px 0 0;
 
-    .win-title {
-      padding: 15px;
-      font-weight: 500;
-      font-size: 18px;
-      line-height: 24px;
-      text-align: center;
+    button {
+      flex: 1;
+      height: 48px;
+      margin: 0;
+      border: 0;
+      background-color: #fff;
     }
 
-    .win-input {
-      margin: 10px 25px 10px 25px;
-
-      input {
-        width: 100%;
-        border: none;
-        border-radius: 0;
-        border-bottom: 1px solid rgba(114, 114, 114, 0.4);
-      }
-
-      ::-webkit-input-placeholder {
-        color: #999;
-        font-size: 14px;
-      }
+    button:active {
+      background: rgba(102, 102, 102, 0.07);
     }
 
-    .btn {
-      display: flex;
-      overflow: hidden;
-
-      button {
-        flex: 1;
-        height: 48px;
-        margin: 0;
-        border: 0;
-        background-color: #fff;
-      }
-
-      button:active {
-        background: rgba(102, 102, 102, 0.07);
-      }
-
-      :last-child {
-        color: rgb(9, 114, 231);
-      }
+    :last-child {
+      color: rgb(9, 114, 231);
     }
   }
+}
 
-  .tip {
-    display: block;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 10px;
-    z-index: 6;
+.tip {
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  z-index: 6;
 
-    .warning {
-      padding: 15px;
-      color: white;
-    }
+  .warning {
+    padding: 15px;
+    color: white;
   }
+}
 
-  .tip-mass {
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 8;
-  }
+.tip-mass {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 8;
+}
 </style>

@@ -16,7 +16,7 @@
     </form>
     <span>{{ passMessage }}</span>
     <input type="text"
-           placeholder="内测码"
+           placeholder="内测码：qwer"
            v-model="check"
            @keyup.enter="signIn">
     <span>{{ checkMessage }}</span>

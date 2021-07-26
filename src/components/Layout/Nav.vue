@@ -38,7 +38,6 @@
     padding: 8px 0;
     font-size: 10px;
     display: flex;
-    /*z-index: 2;*/
     background: #f6f6f6;
 
     > .item {
