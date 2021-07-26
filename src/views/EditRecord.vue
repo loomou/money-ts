@@ -129,14 +129,21 @@ export default class EditRecord extends Vue {
     return dayjs(e).format('YYYY年M月DD日 HH:mm:ss');
   }
 
-  remove() {
+  async remove() {
     if (this.currentList) {
-      service.delete('/record/delete', {
+      await service.delete('/record/delete', {
         params: {
           id: this.$route.params.id,
           userId: localStorage.getItem('userId')
         }
+      }).then(res => {}).catch(err => {
+        console.log(err);
+      });
+      await service.get('/record/get', {
+        params: {userId: localStorage.getItem('userId')}
       }).then(res => {
+        window.localStorage.setItem('recordList', JSON.stringify(res.data.recordList));
+        this.$store.commit('RecordStore/fetchRecords');
         this.$router.push('/detailed');
       }).catch(err => {
         console.log(err);

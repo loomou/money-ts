@@ -102,7 +102,7 @@ export default class Keyboard extends Vue {
     this.output = '0';
   }
 
-  ok() {
+  async ok() {
     const num = parseFloat(this.output);
     if (num === 0) {
       return;
@@ -111,7 +111,7 @@ export default class Keyboard extends Vue {
       this.$store.commit('RecordStore/setAmount', num);
       this.$store.commit('RecordStore/updateRecord', this.$store.state.RecordStore.setRecord);
       const record = this.$store.state.RecordStore.setRecord;
-      service.post('/record/update', {
+      await service.post('/record/update', {
         type: record.type,
         note: record.note,
         icon: record.icon,
@@ -123,11 +123,19 @@ export default class Keyboard extends Vue {
       }).catch(err => {
         console.log(err);
       });
+      await service.get('/record/get', {
+        params: {userId: localStorage.getItem('userId')}
+      }).then(res => {
+        window.localStorage.setItem('recordList', JSON.stringify(res.data.recordList));
+        this.$store.commit('RecordStore/fetchRecords');
+      }).catch(err => {
+        console.log(err);
+      });
       this.content = '修改成功';
     } else {
       this.$store.commit('RecordStore/setAmount', num);
       const record = this.$store.state.RecordStore.setRecord;
-      service.post('/record/create', {
+      await service.post('/record/create', {
         type: record.type,
         note: record.note,
         icon: record.icon,
@@ -135,19 +143,19 @@ export default class Keyboard extends Vue {
         createdAt: record.createdAt,
         userId: localStorage.getItem('userId')
       }).then(res => {
-        service.get('/record/get', {
-          params: {userId: localStorage.getItem('userId')}
-        }).then(res => {
-          window.localStorage.setItem('recordList', JSON.stringify(res.data.recordList));
-          this.$store.commit('RecordStore/fetchRecords');
-        }).catch(err => {
-          console.log(err);
-        });
       }).catch(err => {
         console.log(err.response.data);
       });
       this.content = '添加成功';
     }
+    await service.get('/record/get', {
+      params: {userId: localStorage.getItem('userId')}
+    }).then(res => {
+      window.localStorage.setItem('recordList', JSON.stringify(res.data.recordList));
+      this.$store.commit('RecordStore/fetchRecords');
+    }).catch(err => {
+      console.log(err);
+    });
     this.output = '0';
     this.show = this.showMask = true;
     setTimeout(() => {
