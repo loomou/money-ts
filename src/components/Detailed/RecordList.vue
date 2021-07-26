@@ -52,6 +52,7 @@
         </ul>
       </li>
     </ul>
+    <div class="no-data" v-if="getRecordList.length === 0">暂无记录</div>
   </div>
 </template>
 
@@ -246,5 +247,13 @@ export default class RecordList extends Vue {
       }
     }
   }
+}
+
+.no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: rgb(144, 147, 153);
 }
 </style>
