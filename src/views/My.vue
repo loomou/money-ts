@@ -40,7 +40,3 @@ export default class My extends Vue {
   }
 };
 </script>
-
-<style scoped>
-
-</style>
