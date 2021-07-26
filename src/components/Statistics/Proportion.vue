@@ -21,9 +21,9 @@
                 :class="SelectType === 'pay' ? 'pay' : 'income'"></span>
         </span>
       </span>
-        <span class="amount">
+        <div class="amount">
           ￥{{ formatAmount(item.amount) }}
-        </span>
+        </div>
       </li>
     </ul>
     <div class="no-data" v-if="hhh.length === 0">暂无数据</div>
@@ -144,6 +144,7 @@ export default class Proportion extends Vue {
         position: relative;
         height: 6px;
         width: 100%;
+        margin-right: 5px;
         background: rgb(229, 229, 229);
         border-radius: 16px;
 
@@ -165,6 +166,9 @@ export default class Proportion extends Vue {
     }
 
     .amount {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
       width: 56px;
     }
   }
