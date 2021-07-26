@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul class="pro-wrapper">
-      <li class="pro-content" v-for="(item, index) in hhh" :key="index">
+      <li class="pro-content" v-for="(item, index) in tagProportion" :key="index">
       <span class="icon-wrapper">
         <span class="icon-content" :class="SelectType === 'pay' ? 'pay' : 'income'">
           <svg class="icon" style="width: 18px;height: 18px">
@@ -26,7 +26,7 @@
         </div>
       </li>
     </ul>
-    <div class="no-data" v-if="hhh.length === 0">暂无数据</div>
+    <div class="no-data" v-if="tagProportion.length === 0">暂无数据</div>
   </div>
 </template>
 
@@ -42,34 +42,32 @@ import {Tags} from '@/interfaces/tags';
 export default class Proportion extends Vue {
   @Prop({default: 'pay'}) readonly SelectType!: string;
 
-  get hhh() {
+  get tagProportion() {
     if (!this.$store.state.RecordStore.recordList) return;
-    const uuu = clone(this.$store.state.RecordStore.recordList as Record[])
-        .filter(t => dayjs(t.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
-        .filter(t => t.type === this.SelectType);
-    type DDD = { icon: string, id: string, name: string, type: string }
-    type EEE = { [key: string]: { amount: number, category: DDD, ratio: number } }
-    let eee: EEE = {};
+    const currentMonthTotal = clone(this.$store.state.RecordStore.recordList as Record[])
+        .filter(item => dayjs(item.createdAt).isSame(this.$store.state.RecordStore.staDate, 'month'))
+        .filter(item => item.type === this.SelectType);
+    type totalAmount = { [key: string]: { amount: number, category: Tags, ratio: number } }
+    let tagTotalAmount: totalAmount = {};
     let total = 0;
-    uuu.forEach(r => {
-      const yyy = r.icon;
-      if (!(yyy in eee)) {
-        eee[yyy] = {
+    currentMonthTotal.forEach(record => {
+      const icon = record.icon;
+      if (!(icon in tagTotalAmount)) {
+        tagTotalAmount[icon] = {
           amount: 0,
-          category: this.$store.state.TagStore.tagList.find((c: Tags) => c.id == yyy),
+          category: this.$store.state.TagStore.tagList.find((tagItem: Tags) => tagItem.id == icon),
           ratio: 0.0
         };
       }
-      total += r.amount;
-      eee[yyy].amount += r.amount;
-      eee[yyy].ratio = eee[yyy].amount / total;
+      total += record.amount;
+      tagTotalAmount[icon].amount += record.amount;
+      tagTotalAmount[icon].ratio = tagTotalAmount[icon].amount / total;
     });
-    Object.values(eee).forEach(c => c.ratio = c.amount / total);
-    return Object.values(eee).sort((a, b) => b.ratio - a.ratio);
+    Object.values(tagTotalAmount).forEach(tagItem => tagItem.ratio = tagItem.amount / total);
+    return Object.values(tagTotalAmount).sort((a, b) => b.ratio - a.ratio);
   }
 
   formatAmount(amount: number) {
-    console.log(typeof amount);
     if (amount >= 10000) {
       let num = amount / 10000;
       let format = Math.floor(num * 100) / 100;
@@ -178,7 +176,6 @@ export default class Proportion extends Vue {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 32px;
   text-align: center;
   color: rgb(144, 147, 153);
 }
